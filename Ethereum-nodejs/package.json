@@ -1,0 +1,59 @@
+{
+  "name": "ethereum-nodejs",
+  "version": "1.0.0",
+  "description": "Ethereum Nodejs using truffle framework and solidity for writting contracts",
+  "main": "server.js",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "exphbs": "^1.1.0",
+    "express": "4.14.0",
+    "express-handlebars": "^3.0.0",
+    "morgan": "^1.8.1",
+    "multer": "1.3.0",
+    "mysql2": "^1.5.1",
+    "nodemon": "^1.14.11",
+    "sequelize": "^4.32.2"
+  },
+  "dependencies": {
+    "babel-preset-env": "^1.6.1",
+    "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "ethereumjs-tx": "^1.3.7",
+    "ethereumjs-util": "^5.1.5",
+    "hbs": "^4.0.1",
+    "jsonwebtoken": "^8.2.0",
+    "truffle": "4.1.8",
+    "truffle-contract": "^3.0.4",
+    "util": "^0.10.3",
+    "web3": "^0.20.7"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "sourceMaps": true,
+    "retainLines": true
+  },
+  "scripts": {
+    "server": "nodemon server.js --exec babel-node",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js --exec babel-node --presets es2015,stage-2"
+  },
+  "keywords": [
+    "Ethereum",
+    "Nodejs",
+    "Truffle",
+    "Solidity"
+  ],
+  "author": "Mayank Saxena",
+  "license": "ISC"
+}

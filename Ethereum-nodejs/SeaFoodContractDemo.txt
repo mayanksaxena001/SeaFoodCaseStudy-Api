@@ -1,0 +1,13 @@
+SeaFoodContract.deployed().then(val=>{cont=val});
+accounts=web3.eth.accounts;
+cont.addAsFisherMan(accounts[1],'Mayank')
+cont.addAsBuyer(accounts[2],'Raju');
+cont.addAsBuyer(accounts[3],'Saket');
+cont.getUser(accounts[1]);
+cont.addEntity(accounts[1],'Fish1-1',10,10);
+cont.addEntity(accounts[1],'Fish1-2',10,10);
+cont.getEntity(accounts[1],0);
+cont.buyEntity(accounts[1],accounts[2],'Fish1-1',5,10,0);
+
+
+

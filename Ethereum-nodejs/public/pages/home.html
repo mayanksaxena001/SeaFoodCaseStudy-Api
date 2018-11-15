@@ -1,0 +1,142 @@
+<div class="container-fluid maincontainer" >
+  <div class="row margin5">
+	<label style="margin:5px" class="adminlabel float-right"><span><img src="/SVGs/user_light.svg"></span> ADMIN : <span class="adminname" ng-click="showAdminDetails()">saket</span> </label>
+  </div>
+  <div class="row margin5 padding10">
+    <div class="col-sm-2 padding10">
+		<label>TRANSFER ENTITIES</label>
+	</div>
+    <div class="col-sm-2 padding15">
+		<select  style="width:100%" id="selectType" ng-model="selectedType" ng-options="x for x in types"> 
+		<option value="">SELECT TYPE</option>
+		</select>
+	</div>
+    <div class="col-sm-8 padding10 scrollablediv">
+		<table class="table table-sm table-dark">
+		  <tr>
+			<th>ENTITY</th>
+			<th>QUANTITY</th> 
+			<th>VALUE</th>
+			<th>OWNER</th>
+			<th class="a-center">TRANSACT</th>
+		  </tr>
+		  <tr ng-repeat="x in transferEntities">
+			<td>{{ x.entity }}</td>
+			<td>{{ x.quantity }}</td>
+			<td>{{ x.value }}</td>
+			<td>{{ x.owner }}</td>
+			<td class="a-center"><button ng-click="TransactBtnClicked(x.entity)" class="buttonsmall" ><span><img src="/SVGs/transact_dark.svg"></span></button></td>
+		  </tr>
+		</table>
+	</div>
+  </div>  
+  
+  <hr>
+  
+  <div class="row margin5 padding15">
+    <div class="col-sm-2 padding10">
+		<label>COMPLETE BLOCKCHAIN VIEW</label>
+	</div>
+	<div class="col-sm-2 padding10">
+		<button ng-click="addEntityClicked()" class="buttonlarge" style="width:100% !important">ADD ENTITY</button>
+		<!--<button ng-click="toggleModal('Add Entity')" class="buttonlarge" style="width:100% !important">ADD ENTITY</button>-->
+	</div>
+    <div class="col-sm-8 padding10 scrollablediv">
+		<table class="table table-sm table-dark">
+		  <tr>
+		    <th>ENTITY ID</th>
+			<th>ENTITY</th>
+			<th>VALUE</th> 
+			<th>QUANTITY</th>
+			<th>EDIT</th>
+			<th>STATE ID</th>
+		  </tr>
+		  <tr ng-repeat="x in transferEntities">
+		    <td><button ng-click="entityidClicked(x.entityid)" class="buttonlink aqua_color">{{ x.entityid }}</button></td>
+			<td>{{ x.entity }}</td>
+			<td>{{ x.value }}</td>
+			<td>{{ x.quantity }}</td>
+			<td><button ng-click="EditBtnClicked(x.entityid)" class="buttonsmall" ><span><img src="/SVGs/edit_dark.svg"></span></button></td>
+			<td><button ng-click="statusidClicked(x.statusid )" class="buttonlink aqua_color">{{ x.stateId }}</button></td>
+		  </tr>
+		</table>
+	</div>
+  </div>
+  
+    <hr>
+  
+  <div class="row margin5 padding15">
+    <div class="col-sm-2 padding10">
+		<label>History</label>
+	</div>
+    <div class="col-sm-10 padding10 scrollablediv">
+		<table class="table table-sm table-dark">
+		  <tr>
+			<th>BLOCK HASH</th>
+			<th>BLOCK NO.</th> 
+			<th>TRANSACTION HASH</th>
+			<th>FROM<span style="font-size:9px"> / OLD OWNER</span></th>
+			<th>TO<span style="font-size:9px"> / NEW OWNER</span></th> 
+			<th>ENTITY</th>
+			<th>AMOUNT</th>
+		  </tr>
+		  <tr ng-repeat="x in transactions">
+			<td><button ng-click="histblockhashClicked(x.blockhash )" class="buttonlink aqua_color">{{ x.blockhash }}</button></td>
+			<td>{{ x.blocknumber }}</td>
+			<td><button ng-click="transactionhashClicked(x.transactionhash )" class="buttonlink aqua_color">{{ x.transactionhash }}</button></td>
+			<td>{{ x.oldowner }}</td>
+			<td>{{ x.newowner }}</td>
+			<td>{{ x.entity }}</td>
+			<td>{{ x.amount }}</td>
+		  </tr>
+		</table>
+	</div>
+  </div>
+  
+  <!--<modal visible="showModal">
+    <div class="row">
+	<div class="col-sm-3">
+	<input type="text" ng-model="name" placeholder="Name"></input>
+	</div>
+	<div class="col-sm-3">
+	<input type="text" ng-model="value" placeholder="Value"></input>
+	</div>	
+	<div class="col-sm-3">
+	<input type="text" ng-model="quantity" placeholder="Quantity"></input>
+	</div>		
+	</div>
+  </modal>-->
+  
+</div>
+
+  
+  <hr>
+  
+  <div class="row margin5 padding15">
+    <div class="col-sm-2 padding10">
+		<label>Transactions</label>
+	</div>
+    <div class="col-sm-10 padding10 scrollablediv">
+		<table class="table table-sm table-dark">
+		  <tr>
+			<th>BLOCK HASH</th>
+			<th>BLOCK NO.</th> 
+			<th>TRANSACTION HASH</th>
+			<th>FROM<span style="font-size:9px"> / OLD OWNER</span></th>
+			<th>TO<span style="font-size:9px"> / NEW OWNER</span></th> 
+			<th>ENTITY</th>
+			<th>AMOUNT</th>
+		  </tr>
+		  <tr ng-repeat="x in transactions">
+			<td><button ng-click="blockhashClicked(x.blockhash )" class="buttonlink aqua_color">{{ x.blockhash }}</button></td>
+			<td>{{ x.blocknumber }}</td>
+			<td><button ng-click="transactionhashClicked(x.transactionhash )" class="buttonlink aqua_color">{{ x.transactionhash }}</button></td>
+			<td>{{ x.oldowner }}</td>
+			<td>{{ x.newowner }}</td>
+			<td>{{ x.entity }}</td>
+			<td>{{ x.amount }}</td>
+		  </tr>
+		</table>
+	</div>
+  </div>
+</div>

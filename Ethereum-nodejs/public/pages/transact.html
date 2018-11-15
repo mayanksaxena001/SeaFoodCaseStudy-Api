@@ -1,0 +1,82 @@
+<div class="jumbotron text-center popupcontainer" >
+<div class="row  padding10">
+    <table style="margin-left:auto; margin-right:auto" id="transactTable">
+	<tr>
+		<td>
+		<label class="transparentBG float-left">TYPE</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">ENTITY</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">QUANTITY</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">VALUE</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">OWNER</label>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p class="transparentBG float-left" ng-bind="type"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="entity"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="quantity"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="value"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="owner"></p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<label class="transparentBG float-left">WEIGHT</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">PLACE</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">LATITUDE</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">LONGITUDE</label>
+		</td>
+		<td>
+		<label class="transparentBG float-left">DATE</label>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p class="transparentBG float-left" ng-bind="weight"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="place"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="latitude"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="longitude"></p>
+		</td>
+		<td>
+		<p class="transparentBG float-left" ng-bind="date"></p>
+		</td>
+	</tr>
+	</table>	
+</div>
+<div class="row  padding10">
+	<div class="col-sm-8">
+	</div>
+	<div class="col-sm-4">
+	<button ng-click="cancelbtnClicked()" class="buttonlink float-right">Cancel <span><img src="/SVGs/arrow_white.svg"></span></button>
+	<button ng-click="donebtnClicked()" class="btn btn-primary buttonlarge float-right marginr10">Confirm</button>
+	</div>		
+</div>
+</div>

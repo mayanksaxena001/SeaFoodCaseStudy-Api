@@ -1,0 +1,26 @@
+<div class="jumbotron text-center maincontainer">
+    <form name = "LoginForm" novalidate>
+    <table class="table-condensed" style="margin-left:auto; margin-right:auto">
+	<tr>
+		<td>
+		<input type="text" ng-model="username" placeholder="Username"></input>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<input type="text" ng-model="password" placeholder="Password"></input>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<button ng-click="LoginClicked()" class="btn btn-primary buttonlarge float-right">Login</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<button ng-click="toSignUpClicked()" class="buttonlink float-right">Sign Up  <span><img src="/SVGs/arrow_white.svg"></span></button>
+		</td>
+	</tr>
+	</table>
+    </form>
+</div>

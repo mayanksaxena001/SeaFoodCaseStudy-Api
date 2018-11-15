@@ -1,0 +1,43 @@
+<div class="jumbotron text-center maincontainer">
+<form name = "SignUpForm" novalidate>
+   <table class="table-condensed" style="margin-left:auto; margin-right:auto">
+      <tr>
+        <td>
+		<input type="text" ng-model="name_signup" placeholder="Name"></input>
+		</td>
+	  </tr>
+	  <tr>
+        <td>
+		<input type="text" ng-model="username_signup" placeholder="Username"></input>
+		</td>
+      </tr>
+	  <tr>
+        <td>
+		<input type="text" ng-model="email_signup" placeholder="Email"></input>
+		</td>
+      </tr>
+	  <tr>
+        <td>
+		<input type="text" ng-model="password_signup" placeholder="Password"></input>
+		</td>
+      </tr>
+	  <tr>
+        <td>
+		<select  style="width:100%" id="selectType" class="select-style" ng-model="selectedType" ng-options="x for x in types"> 
+		<option value="">Select Type</option>
+		</select>
+		</td>
+      </tr>
+	  <tr>
+        <td>
+		<button ng-click="signUpClicked()" class="btn btn-primary buttonlarge float-right">Sign Up</button>
+		</td>
+      </tr>
+	  <tr>
+        <td>
+		<button ng-click="toLoginClicked()" class="buttonlink float-right">Login <span><img src="/SVGs/arrow_white.svg"></span></button>
+		</td>
+      </tr>
+  </table>
+</form>
+</div>

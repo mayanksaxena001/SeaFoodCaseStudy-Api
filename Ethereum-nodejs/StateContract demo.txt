@@ -1,0 +1,14 @@
+StateContract.deployed().then(val=>{cont1=val})
+accounts=web3.eth.accounts;
+cont1.attachSensor(accounts[1],20,10,'Kothrud','18th April',100).then(val=>{stateId=val});
+sensorId=cont1.getSensorByIndex(0);
+cont1.addSensor('SENSOR-0');
+cont1.getSensorName();
+cont1.getTelemetriesByIndex(,0);
+cont1.getTelemetryInfo();
+cont1.updateSensor('0x453e6570153713e95d693eb315742fa1920504c591443aaf30016c40c34b81b4','Pashan',30);
+cont1.getTransactionStateByIndex(0);
+cont1.getTransactionInfo();
+
+cont1.attachSensor('0x453e6570153713e95d693eb315742fa1920504c591443aaf30016c40c34b81b4','0xcc68a66d5f5f18c306ad174a70edbf1b3bca6ae9a8163596ad98e534e3caad81','0x8c38bcc4eb891a1bb765d4148df9a3a4758d3917f8230c829b0a8a0c7f75b405',100,5,'Kothrud',18.55,73.225,'8th May',100)
+
