@@ -3,3 +3,8 @@ Ethereum-nodejs/node_modules
 Ethereum-nodejs/.git
 Ethereum-nodejs/.vscode
 
+Beacon-server/.git
+Beacon-server/.vscode
+
+Beacon-server/node_modules
+
