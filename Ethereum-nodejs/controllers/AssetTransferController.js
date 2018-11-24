@@ -1,6 +1,5 @@
 var contract = require('truffle-contract');
 var contractConfig = require('../config/contract.config');
-
 var artifacts = require('../bin/truffle/latest/contracts/AssetTransfer.json');
 var AssetTransferContract = contract(artifacts);
 var Util = require('./Util');
@@ -22,7 +21,7 @@ class AssetTransferController {
     }
 
     async init() {
-        this.AssetTransferContract.setProvider(this._web3.currentProvider)
+        this.AssetTransferContract.setProvider(this._web3.currentProvider);
         this.AssetTransferContract.setNetwork(contractConfig.NETWORK_ID);
         this._instance = await this.AssetTransferContract.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
         this._accounts = await this._web3.eth.accounts;
@@ -116,9 +115,9 @@ class AssetTransferController {
         return this._web3.isConnected();
     }
 
-    async createNewAccount(_username, _password, _type) {
+    async createNewAccount(_username, _password, _type,menmonic) {
         try {
-            let val = await this._web3.personal.newAccount(_password, this._gas);
+            let val = await Util.generateNextAddress(menmonic,0);
             await this.insertUser(val, _username, _type);
             return val;
         } catch (err) {
@@ -178,6 +177,10 @@ class AssetTransferController {
         return transaction;
     }
 
+    async balanceOf(_address) {
+        return await this._instance.balanceOf(_address, this._gas);
+      }
+
     async getUserAssets(_address) {
         if (!_address) {
             throw new Error("Unknown address ");
@@ -187,7 +190,7 @@ class AssetTransferController {
         for (var i = 0; i < arr.length; i++) {
             var asset = await this.getAssetById(arr[i]);
             //TODO: All user assets fetched,change in contract itself
-            if(asset.address == _address){
+            if (asset.address == _address) {
                 assets.push(asset);
             }
         }
@@ -221,8 +224,18 @@ class AssetTransferController {
     }
 
     async getAccounts() {
-        var accounts = await this._web3.eth.accounts;
+        var accounts = await repo.getAddressDetails();
         return accounts;
+    }
+
+    async getPrivateKey(_account ,mnemonic, _password) {
+        // var privateKey =await Util.getPrivateKey(_account,_password);
+        var privateKey =await Util.getPrivateKeyFromSeed(_account,mnemonic,_password);
+        if(privateKey){
+            return privateKey;
+        }else{
+            throw new Error('Address Keys Not found');
+        }
     }
 
     async transferAsset(_from, _to, _supplier, _id, _quantity, _value) {
@@ -242,9 +255,9 @@ class AssetTransferController {
         }
     }
 
-    async transferTokens(_from,_to,_value) {
+    async transferTokens(_from, _to, _value) {
         try {
-            return await this._instance.transferTokens(_from,_to,_value, this._gas);
+            return await this._instance.transferTokens(_from, _to, _value, this._gas);
         } catch (err) {
             throw new Error(err);
         }
@@ -261,7 +274,7 @@ class AssetTransferController {
     async getSuppliers() {
         var suppliers = new Array();
         var users = await this._instance.getUsers(this._gas);
-        for(var i=0;i<users.length;i++){
+        for (var i = 0; i < users.length; i++) {
             var user = await this._instance.getUserByAddress(users[i]);
             if (user != null && user[1] == "SUPPLIER") {
                 suppliers.push({

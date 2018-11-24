@@ -47,9 +47,14 @@ module.exports = class User extends SequelizeModel {
                 defaultValue: true
             },
             balance : {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
                 allowNull: false,
-                defaultValue: 0
+                defaultValue: '0'
+            },
+            mnemonic : {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: '0'
             }
         });
     }

@@ -9,7 +9,7 @@ account1 = web3.toChecksumAddress(account1);
 account2 = web3.toChecksumAddress(account2);
 
 const pk = 'ec5a9e5872693ae3baf9f0dfebd740e20e9569daaeda0721e3cc9549ebd507e7';
-const pk1 = new Buffer.from(pk, 'hex')
+const pk1 = new Buffer.from(pk, 'hex');
 
 module.exports = {
     async sendEther() {

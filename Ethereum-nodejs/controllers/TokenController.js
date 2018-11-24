@@ -1,8 +1,9 @@
 var contract = require('truffle-contract');
 var contractConfig = require('../config/contract.config');
 
-var artifacts = require('../truffle/build/contracts/StandardToken.json');
+var artifacts = require('../bin/truffle/latest/contracts/AssetTransfer.json');
 var StandardToken = contract(artifacts);
+var Wallet =  contractConfig.Wallet;
 
 class TokenController {
   constructor() {
@@ -14,7 +15,7 @@ class TokenController {
   async init() {
     this.StandardToken.setProvider(this._web3.currentProvider);
     this.StandardToken.setNetwork(contractConfig.NETWORK_ID);
-    this._instance = await this.StandardToken.at(contract_id.StandardToken);
+    this._instance = await this.StandardToken.at(contract_id.CONTRACT_ADDRESS.AssetTransferContract);
     // this._web3.eth.defaultAccount = this._accounts[0];
     this._gas = {
       from: this._accounts[0],
@@ -40,10 +41,8 @@ class TokenController {
   async balanceOf(_address) {
     return await this._instance.balanceOf(_address, this._gas);
   }
-
-
 }
-var _contract = new TokenController();
+var tokenController = new TokenController();
 module.exports = {
-  _contract
+  tokenController
 }

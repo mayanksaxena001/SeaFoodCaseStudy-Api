@@ -3,6 +3,7 @@ module.exports = class UserRepository {
     constructor() { }
 
     update(data, id) {
+        data.updatedAt = new Date();
         return user.find({ where: { id: id } }).then(u => u.update(data));
     };
     remove(id) {
@@ -20,7 +21,10 @@ module.exports = class UserRepository {
     getAll() {
         return user.find().then(u => {return u;});
     };
-    create(data) {
+    async getAddressDetails(){
+        return user.findAll({attributes: ['name', 'account']});
+    }
+     create(data) {
         return user.create(data);
     };
     findByUserName(username) {

@@ -5,11 +5,13 @@ var config = require('../config/config');
 var UserRepository = require('../mysql/db/user.repository');
 const repo = new UserRepository();
 var Promise = require('bluebird');
+var Util = require('./Util');
 var {
   assetTransferContract
 } = require('./AssetTransferController');
 var _contract = assetTransferContract;
 var web3 = require('web3');
+
 
 module.exports = {
 
@@ -41,7 +43,10 @@ module.exports = {
       if (!_contract.isWeb3Connected()) {
         throw new Error("Web3 not connected");
       }
-      var _account = await _contract.createNewAccount(req.body.username, req.body.password, req.body.type);
+      var _mnemonic = await Util.generateHDWalletMenemonic();
+      var _account = await _contract.createNewAccount(req.body.username, req.body.password, req.body.type,_mnemonic);
+      var _balance = await _contract.balanceOf(_account);
+      _balance = _balance.toNumber();
       var _user = await repo.create({
         name: req.body.name,
         username: req.body.username,
@@ -49,7 +54,9 @@ module.exports = {
         password: hashedPassword,
         account: _account,
         type: req.body.type,
-        active: true
+        active: true,
+        balance: _balance,
+        mnemonic:_mnemonic
       });
       // create a token
       var token = jwt.sign({
@@ -75,8 +82,8 @@ module.exports = {
 
   async getUser(req, res) {
     try {
-      var user ={};
-       user = await repo.getById(req.decoded.id);
+      var user = {};
+      user = await repo.getById(req.decoded.id);
       //TODO remove password from user object
       if (!user) return res.status(404).send("No user found.");
       user.password = '';
@@ -134,8 +141,10 @@ module.exports = {
         auth: false,
         token: null
       });
+      var _balance = await _contract.balanceOf(user.account);
       await repo.update({
-        active: true
+        active: true,
+        balance: _balance.toNumber()
       }, user.id);
       var token = jwt.sign({
         id: user.id,

@@ -2,6 +2,9 @@ var {
     assetTransferContract
 } = require('../controllers/AssetTransferController');
 var _contract = assetTransferContract;
+var bcrypt = require('bcryptjs');
+var UserRepository = require('../mysql/db/user.repository');
+const repo = new UserRepository();
 
 module.exports = {
     default_req(req, res, callback) {
@@ -32,6 +35,21 @@ module.exports = {
         try {
             var accounts = await _contract.getAccounts();
             return res.status(200).send(accounts);
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+    },
+
+    async getPrivateKey(req,res){
+        try {
+            var user = await repo.findByUserName(req.decoded.username);
+            if (!user) return res.status(404).send('No user found.');
+            var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+            if(!passwordIsValid){
+                return res.status(404).send('Invalid Password.');
+            }
+            var privateKey = await _contract.getPrivateKey(req.decoded.account,user.mnemonic,req.body.password);
+            return res.status(200).send(privateKey);
         } catch (err) {
             return res.status(500).send(err);
         }

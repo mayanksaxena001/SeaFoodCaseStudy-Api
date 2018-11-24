@@ -9,6 +9,7 @@ router.param('id', AssetTransferApi.validation_req);
 // router.post('/user',ContractApi.add_user)
 
 router.get('/accounts', AssetTransferApi.getAccounts);
+router.post('/key', AssetTransferApi.getPrivateKey);
 router.post('/asset', AssetTransferApi.createAsset);
 router.put('/asset', AssetTransferApi.editAsset);
 router.get('/asset/:id', AssetTransferApi.getAssetById);
