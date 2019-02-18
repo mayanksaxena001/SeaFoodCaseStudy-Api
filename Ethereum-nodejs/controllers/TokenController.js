@@ -15,7 +15,7 @@ class TokenController {
   async init() {
     this.StandardToken.setProvider(this._web3.currentProvider);
     this.StandardToken.setNetwork(contractConfig.NETWORK_ID);
-    this._instance = await this.StandardToken.at(contract_id.CONTRACT_ADDRESS.AssetTransferContract);
+    this._instance = await this.StandardToken.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
     // this._web3.eth.defaultAccount = this._accounts[0];
     this._gas = {
       from: this._accounts[0],
@@ -25,6 +25,16 @@ class TokenController {
 
   async transfer(_from,_to,_value) {
     var transaction =  await this._instance.transferFrom(_from,_to,_value,this._gas);
+    return transaction;
+  }
+
+  async transferTokens(_from,_to,_value) {
+    var transaction =  await this._instance.transferTokens(_from,_to,_value,this._gas);
+    return transaction;
+  }
+
+  async allowed(_owner,_spender) {
+    var transaction =  await this._instance.allowance(_owner,_spender,this._gas);
     return transaction;
   }
 

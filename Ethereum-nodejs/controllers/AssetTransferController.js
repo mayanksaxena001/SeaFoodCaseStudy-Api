@@ -115,13 +115,11 @@ class AssetTransferController {
         return this._web3.isConnected();
     }
 
-    async createNewAccount(_username, _password, _type,menmonic) {
+    async createNewAccount(address, _username, _password, _type, menmonic) {
         try {
-            let val = await Util.generateNextAddress(menmonic,0);
-            await this.insertUser(val, _username, _type);
-            return val;
+            return await this.insertUser(address, _username, _type);
         } catch (err) {
-            throw new Error(err);
+            throw new Error(err);createNewAccount
         };
     }
 
@@ -179,7 +177,7 @@ class AssetTransferController {
 
     async balanceOf(_address) {
         return await this._instance.balanceOf(_address, this._gas);
-      }
+    }
 
     async getUserAssets(_address) {
         if (!_address) {
@@ -224,18 +222,15 @@ class AssetTransferController {
     }
 
     async getAccounts() {
-        var accounts = await repo.getAddressDetails();
-        return accounts;
-    }
-
-    async getPrivateKey(_account ,mnemonic, _password) {
-        // var privateKey =await Util.getPrivateKey(_account,_password);
-        var privateKey =await Util.getPrivateKeyFromSeed(_account,mnemonic,_password);
-        if(privateKey){
-            return privateKey;
-        }else{
-            throw new Error('Address Keys Not found');
+        var accounts = [];
+        var _accounts = await repo.getAddressDetails();
+        for (var i = 0; i < _accounts.length; i++) {
+            var account = {};
+            account.fullName = _accounts[i].name;
+            account.account = _accounts[i].account;
+            accounts.push(account);
         }
+        return accounts;
     }
 
     async transferAsset(_from, _to, _supplier, _id, _quantity, _value) {

@@ -1,4 +1,22 @@
 {
+    "production": {
+        "database": {
+            "username": "perseus_site",
+            "password": "perseus123",
+            "database":"eth_db",
+            "host" : "site.cdhmbaj05trt.ap-south-1.rds.amazonaws.com",
+            "port": 3306,
+            "dialect": "mysql",
+            "pool": {
+                "max": 5,
+                "min": 0,
+                "acquire": 30000,
+                "idle": 10000
+            }
+        },
+        "host": "localhost",
+        "port": 8080
+    },
     "development": {
         "database": {
             "username": "root",
@@ -16,8 +34,5 @@
         },
         "host": "localhost",
         "port": 8080
-    },
-    "production": {
-       
     }
 }
