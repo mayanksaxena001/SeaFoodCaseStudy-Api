@@ -9,7 +9,7 @@ module.exports = (app) => {
     app.use(bodyParser.json({
         type: "*/*"
     }));
-    app.use( (req, res, next) =>{
+    app.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,x-access-token");
         res.header('Access-Control-Allow-Methods', 'POST, GET,PUT ,DELETE, OPTIONS');
@@ -17,6 +17,9 @@ module.exports = (app) => {
         next();
     });
     app.options('*', cors()); // preflight OPTIONS; put before other routes
+    app.get('/', function (req, res) {
+        res.render('main');
+    });
     Handlebars.registerHelper('json', function (context) {
         return JSON.stringify(context);
     });
