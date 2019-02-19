@@ -1,0 +1,30 @@
+.headerbar {
+  background-color: #00b38f;
+  border-color: #00b38f;
+  padding-top: 15px !important;
+}
+
+.headertext {
+  font-size: 25px !important;
+}
+
+.public_key {
+  position: relative;
+  line-height: 1em;
+  max-height: 2em;
+  /* 2 times the line-height to show 2 lines */
+  overflow: hidden;
+}
+
+.wordwrap
+{
+/* wrap long text and urls */
+white-space: pre; /* CSS 2.0 */
+white-space: pre-wrap; /* CSS 2.1 */
+white-space: pre-line; /* CSS 3.0 */
+white-space: -pre-wrap; /* Opera 4-6 */
+white-space: -o-pre-wrap; /* Opera 7 */
+white-space: -moz-pre-wrap; /* Mozilla */
+word-wrap: break-word; /* IE 5+ */
+}
+

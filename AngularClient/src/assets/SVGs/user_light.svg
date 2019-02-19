@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M7,0 C10.85,0 14,3.15 14,7 C14,10.85 10.85,14 7,14 C3.15,14 0,10.85 0,7 C0,3.15 3.15,0 7,0 Z M2.52,10.36 C3.57,11.69 5.18,12.6 7,12.6 C8.82,12.6 10.43,11.69 11.41,10.36 C10.85,9.73 9.66,9.24 8.26,9.03 C8.19,8.89 8.12,8.68 8.12,8.47 C8.12,8.26 8.19,8.05 8.26,7.91 C8.96,7.42 9.45,6.51 9.45,5.53 C9.45,4.06 8.33,2.8 7,2.8 C5.67,2.8 4.55,4.06 4.48,5.53 C4.48,6.58 4.97,7.42 5.67,7.91 C5.74,8.12 5.81,8.26 5.81,8.47 C5.81,8.68 5.74,8.82 5.67,9.03 C4.27,9.17 3.15,9.73 2.52,10.36 Z" id="path-1"></path>
+    </defs>
+    <g id="Tablet-9″" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-377.000000, -592.000000)">
+        <g id="Page-1" transform="translate(377.000000, 592.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Clip-2"></g>
+            <polygon id="Fill-1" fill="#586467" mask="url(#mask-2)" points="-8.5 22.5 22.5 22.5 22.5 -8.5 -8.5 -8.5"></polygon>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,51 @@
+<div class="preloader" [hidden]="!waiting"></div>
+
+
+<div class="jumbotron text-center maincontainer">
+  <form #loginForm="ngForm">
+    <table class="table-condensed" style="margin-left:auto; margin-right:auto">
+      <tr>
+        <td>
+          <input type="text" [(ngModel)]="loginCredentials.username" placeholder="Username" name='username' #username='ngModel' required>
+          <small *ngIf="username.errors && (username.dirty || username.touched)" class="error-message">
+            <div [hidden]="!username.errors.required">
+              Username is required.
+            </div>
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="password" [(ngModel)]="loginCredentials.password" placeholder="Password" name="password" #password='ngModel'
+            required>
+          <small *ngIf="password.errors && (password.dirty || password.touched)" class="error-message">
+            <div [hidden]="!password.errors.required">
+              password is required.
+            </div>
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button type="submit" (click)="login()" class="btn btn-primary buttonlarge float-right" [disabled]="!loginForm.form.valid">Login</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button routerLink='/signup' class="buttonlink float-right">Sign Up
+            <span>
+              <img src="assets/SVGs/arrow_dark.svg">
+            </span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div *ngIf="errorShow" class="error">
+            Authentication Failure
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>

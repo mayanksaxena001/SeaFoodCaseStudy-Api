@@ -1,0 +1,330 @@
+<div class="preloader" [hidden]="!waiting"></div>
+
+<nav class="navbar navbar-default headerbar">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand headertext">
+        <b>SEAFOOD </b>
+        <small>case study</small>
+      </a>
+    </div>
+    <div class="profile" *ngIf='navBarVisible'>
+      <div (click)='showProfileDetails()'>
+        <label class="adminlabel float-right">
+          <span class="username">
+            <img src="assets/SVGs/user_light.svg">
+            <span>
+              {{user?.username}}
+            </span>
+          </span>
+
+          <span disabled="disabled" class="useraddress">
+            {{user?.account}}
+          </span>
+        </label>
+      </div>
+      <div class="admin-details float-right" *ngIf='profileDetailsVisible'>
+        <div class="profile-details">
+          <div class="row">
+            <div class="col-md-4 profile-details-span">Full Name:</div>
+            <span>
+              <b> {{user?.name}}</b>
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-md-4 profile-details-span">E-mail:</div>
+            <span>
+              <b> {{user?.email}}</b>
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-md-4 profile-details-span">Username:</div>
+            <span>
+              <b> {{user?.username}}</b>
+            </span>
+          </div>
+
+          <br>
+
+          <div class="row">
+            <div class="col-md-4 profile-details-span">Address:</div>
+            <span>
+              <b>
+                <a class="trackId" data-dismiss="modal" (click)="showRequestTokensForm()" data-toggle="modal" data-target="#transferToken">{{user?.account}}</a>
+              </b>
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-md-4 profile-details-span">Type:</div>
+            <span>
+              <b> {{user?.type}}</b>
+            </span>
+          </div>
+        </div>
+        <div class="blockchain-details">
+          <div class="row">
+            <div class="col-md-3">
+              <img height="50px" width="50px" src="assets/SVGs/Artboard.svg">
+            </div>
+            <div class="col-md-3 user-balance" (click)="showRequestTokensForm()" data-toggle="modal" data-target="#requestToken">
+              <b>{{user?.balance}}
+              </b>
+            </div>
+            <div class="col-md-3 " style="    margin-top: 10px;
+            font-size: 25px;" (click)="showRequestTokensForm()" data-toggle="modal" data-target="#requestToken">
+              <b>XFT </b>
+            </div>
+            <div class="col-md-3 " style="    margin-top: 10px;
+            font-size: 10px;" (click)="showRequestTokensForm()" data-toggle="modal" data-target="#getPrivateKey">
+              <span>Get Private Key</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p class="token">
+                <i>Note: To request tokens, just click on balance amount.</i>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="logout" (click)="logout()">
+        <img height="30px" width="30px" src="assets/SVGs/logout_png.png">
+      </span>
+    </div>
+  </div>
+</nav>
+
+<!--Request Token Modal -->
+<div class="modal fade" id="requestToken" role="dialog" aria-labelledby="TokenModalLabel" data-backdrop="static" data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog request-token-dialog">
+    <!-- Modal content-->
+    <div class="modal-content text-center popupcontainer">
+      <div class="">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10">REQUEST TOKEN</p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+
+          <form #requestTokenForm="ngForm">
+
+            <div class="row padding10">
+              <div class="col-sm-12">
+                <input type="text" class="popupinput" [(ngModel)]="tokenValue" placeholder="Token Value" pattern="[0-9]+" name='requestedToken'
+                  #requestedToken='ngModel' required>
+                <small *ngIf="requestedToken.errors && (requestedToken.dirty || requestedToken.touched)" class="error-message">
+                  <div class="value-validation-msg" [hidden]="!requestedToken.errors.required">
+                    Token Value is required.
+                  </div>
+                  <div class="validation-msg" [hidden]="!requestedToken.errors.pattern">
+                    Please enter number only.
+                  </div>
+                </small>
+              </div>
+            </div>
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <button (click)="requestTokens()" class="buttonlink float-right" [disabled]="!requestTokenForm.form.valid" data-dismiss="modal">Request Token
+                  <span>
+                    <img src="assets/SVGs/arrow_dark.svg">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--Transfer Token Modal -->
+<div class="modal fade" id="transferToken" role="dialog" aria-labelledby="TokenModalLabel" data-backdrop="static" data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog request-token-dialog">
+    <!-- Modal content-->
+    <div class="modal-content text-center popupcontainer">
+      <div class="">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10">TRANSFER TOKEN</p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+
+          <form #transferTokenForm="ngForm">
+
+            <div class="row padding10">
+              <div class="col-sm-12">
+                <select [(ngModel)]="userAddress" name="type" placeholder='Select a user' required>
+                  <option value="undefined" disabled selected>Select a user</option>
+                  <option *ngFor="let user of userAddresses" [ngValue]="user.account">{{user.fullName}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row padding10">
+              <div class="col-sm-12">
+                <input type="text" class="popupinput" [(ngModel)]="amountToTransfer" placeholder="Transfer Value" pattern="[0-9]+" name='transferedToken'
+                  #transferedToken='ngModel' required style="width: 100% !important;">
+                <small *ngIf="transferedToken.errors && (transferedToken.dirty || transferedToken.touched)" class="error-message">
+                  <div [hidden]="!transferedToken.errors.required">
+                    Transfer Token Value is required.
+                  </div>
+                  <div [hidden]="!transferedToken.errors.pattern">
+                    Please enter number only.
+                  </div>
+                </small>
+                <small *ngIf="amountToTransfer > user?.balance" class="error-message">
+                  <div>
+                    Transfer Token Value should be less or equal to user balance amount.
+                  </div>
+                </small>
+              </div>
+            </div>
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <button (click)="transferTokens()" class="buttonlink float-right" [disabled]="!transferTokenForm.form.valid || (amountToTransfer <= 0) "
+                  data-dismiss="modal">Transfer Token
+                  <span>
+                    <img src="assets/SVGs/arrow_dark.svg">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--Get Private Key Modal -->
+<div class="modal fade" id="getPrivateKey" role="dialog" aria-labelledby="TokenModalLabel" data-backdrop="static" data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content popupcontainer">
+      <div class="modal-header">
+        <div class="row  padding10">
+          <div class="col-sm-12">
+            <p class="float-left popupHeading marginl10">WALLET DETAILS</p>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+
+        <form #getPrivateKeyForm="ngForm">
+          <!-- <div> -->
+          <div class="row padding10" *ngIf='showGetPrivateKeyForm'>
+            <div class="col-sm-4">
+              <input type="password" class="popupinput" [(ngModel)]="loginPassword" placeholder="Password" name="password" #password='ngModel'
+                required>
+              <small *ngIf="password.errors && (password.dirty || password.touched)" class="error-message">
+                <div [hidden]="!password.errors.required">
+                  password is required.
+                </div>
+              </small>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-7">
+              <input type="text" class="popupinput" [(ngModel)]="walletPath" placeholder="Hd wallet full path " name="walletPath">
+            </div>
+          </div>
+
+          <div class="row padding10" *ngIf='showGetPrivateKeyForm'>
+            <div class="col-sm-8">
+              <input type="text" class="popupinput" [(ngModel)]="walletMnemonic" placeholder="Hd Wallet Mnemonic" name="walletMnemonic">
+            </div>
+          </div>
+
+          <div class="row  padding10" *ngIf='showGetPrivateKeyForm'>
+            <div class="col-sm-12">
+              <button (click)="getPrivateKey()" class="buttonlink float-right" [disabled]="!getPrivateKeyForm.form.valid">Get Private Key
+                <span>
+                  <img src="assets/SVGs/arrow_dark.svg">
+                </span>
+              </button>
+            </div>
+          </div>
+          <!-- </div> -->
+
+          <div *ngIf='!showGetPrivateKeyForm'>
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p>
+                  <b>Address :</b>
+                </p> {{wallet.address}}
+                <a (click)="copyText('address')" data-toggle="tooltip" title="Copy to clipboard">
+                  <span class="glyphicon glyphicon-duplicate"></span>
+                </a>
+                <br>
+                <br>
+                <br>
+                <p>
+                  <b>Private Key:</b>
+                </p> {{wallet.privateKey}}
+                <a (click)="copyText('private key')" data-toggle="tooltip" title="Copy to clipboard">
+                  <span class="glyphicon glyphicon-duplicate"></span>
+                </a>
+                <br>
+                <br>
+                <br>
+                <p class="public_key">
+                  <b>Public Key:</b> {{wallet.publicKey}} </p>
+                <a (click)="copyText('public key')" data-toggle="tooltip" title="Copy to clipboard">
+                  <span class="glyphicon glyphicon-duplicate wordwrap"></span>
+                </a>
+                <br>
+                <br>
+                <br>
+                <p>
+                  <b>HDWalletPath:</b>
+                </p> {{wallet.hdWalletPath}}
+                <a (click)="copyText('wallet path')" data-toggle="tooltip" title="Copy to clipboard">
+                  <span class="glyphicon glyphicon-duplicate"></span>
+                </a>
+                <br>
+                <br>
+                <br>
+                <p>
+                  <b>Mnemonic:</b>
+                </p> {{wallet.mnemonic}}
+                <a (click)="copyText('mnemonic')" data-toggle="tooltip" title="Copy to clipboard">
+                  <span class="glyphicon glyphicon-duplicate"></span>
+                </a>
+
+              </div>
+            </div>
+
+            <div class="row  padding10  text-center">
+              <button (click)="downloadJSONFile()" class="buttonlink" data-dismiss="modal">Click to download keystore JSON file
+                <span>
+                  <img src="assets/SVGs/arrow_dark.svg">
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

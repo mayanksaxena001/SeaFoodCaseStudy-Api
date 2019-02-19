@@ -1,0 +1,868 @@
+<div class="preloader" [hidden]="!waiting"></div>
+
+<div class="container-fluid maincontainer">
+  <div class="row margin5 padding10" *ngIf="user?.type === 'CONSUMER'">
+    <div class="col-sm-2 padding10 entities">
+      <label>BUY ENTITIES</label>
+    </div>
+
+    <div class="col-sm-8 padding10 entitytable">
+      <table class="table table-sm table-dark viewtable mainTable">
+        <thead class="entity-row">
+          <tr>
+            <td>ENTITY</td>
+            <td>QUANTITY</td>
+            <td>VALUE</td>
+            <td>OWNER</td>
+            <td>TYPE</td>
+            <td class="a-center">TRANSACT</td>
+          </tr>
+        </thead>
+        <div *ngIf='noTransferEntityData'>
+          <p class="a-center" style="margin-top: 5%">
+            <b>No Data Available</b>
+          </p>
+        </div>
+        <tbody class="table-body entity-row" *ngIf='!noTransferEntityData'>
+          <tr *ngFor="let x of transferEntities">
+            <td>{{ x.name }}</td>
+            <td>{{ x.quantity }}</td>
+            <td>{{ x.value }}</td>
+            <td>{{ x.username }}</td>
+            <td>{{ x.type }}</td>
+            <td class="a-center">
+              <button (click)="transactBtnClicked(x)" class="buttonsmall" data-toggle="modal" data-target="#transactEntity">
+                <span>
+                  <img src="assets/SVGs/transact_dark.svg">
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="user?.type === 'CONSUMER'">
+    <br>
+    <br>
+  </div>
+
+
+  <div class="row margin5 padding15">
+    <div class="col-sm-2 padding10 entities">
+      <div *ngIf="user?.type === 'PRODUCER' || user?.type === 'CONSUMER'">
+        <label>ENTITIES</label>
+        <button class="float-right buttonlarge" *ngIf="user?.type === 'PRODUCER'" style="margin-top:5%; width:60% !important" data-toggle="modal"
+          data-target="#addEntity">ADD ENTITY</button>
+      </div>
+      <div *ngIf="user?.type === 'SUPPLIER'">
+        <label>SENSORS</label>
+        <button class="float-right action-button" (click)='updateSensorModal()' style="margin-top:5%; width:60% !important" data-toggle="modal"
+          data-target="#addSensor">ADD SENSOR</button>
+      </div>
+    </div>
+    <div class="col-sm-8 padding10 scrollablediv" *ngIf="user?.type === 'PRODUCER' || user?.type === 'CONSUMER'">
+
+      <table class="table table-sm table-dark viewtable mainTable">
+        <thead class="entity-row">
+          <tr>
+            <td style="width:17% !important">TRACK ID</td>
+            <td>ENTITY</td>
+            <td>VALUE</td>
+            <td>QUANTITY</td>
+            <td>CREATED AT</td>
+            <td>UPDATED AT</td>
+            <td *ngIf="user?.type === 'PRODUCER'">EDIT</td>
+          </tr>
+        </thead>
+        <div *ngIf='noEntityData'>
+          <p class="a-center" style="margin-top: 5%">
+            <b>No Data Available</b>
+          </p>
+        </div>
+        <tbody class="table-body entity-row" *ngIf='!noEntityData'>
+          <tr *ngFor="let x of entities">
+            <td>
+              <span (click)="entityIdClicked(x.id)" class="buttonlink aqua_color trackId" data-toggle="modal" data-target="#entityDetails">{{ x.id }} </span>
+            </td>
+            <td [ngClass]="user?.type === 'PRODUCER' ?
+              'padding_left' : 'zero_padding'">{{ x.name}}</td>
+            <td [ngClass]="user?.type === 'PRODUCER' ?
+              'padding_left' : 'zero_padding'">{{ x.value }}</td>
+            <td [ngClass]="user?.type === 'PRODUCER' ?
+              'padding_left_1' : 'padding_left'">{{ x.quantity }}</td>
+            <td [ngClass]="user?.type === 'PRODUCER' ?
+              'padding_left_1' : 'padding_left'">{{ x.createdAt }}</td>
+            <td [ngClass]="user?.type === 'PRODUCER' ?
+              'padding_left_1' : 'padding_left'">{{ x.updatedAt }}</td>
+            <td *ngIf="user?.type === 'PRODUCER'">
+              <button (click)="editEntity(x)" class="buttonsmall" data-toggle="modal" data-target="#editEntity">
+                <span>
+                  <img src="assets/SVGs/edit_dark.svg">
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-8 padding10 scrollablediv" *ngIf="user?.type === 'SUPPLIER'">
+
+      <table class="table table-sm table-dark viewtable mainTable">
+        <thead class="entity-row">
+          <tr>
+            <td>TRACK ID</td>
+            <td>SENSOR</td>
+            <td>STATUS</td>
+            <td>CREATED AT</td>
+            <td>UPDATED AT</td>
+          </tr>
+        </thead>
+        <div *ngIf='noSensorData'>
+          <p class="a-center" style="margin-top: 5%">
+            <b>No Data Available</b>
+          </p>
+        </div>
+        <tbody class="table-body entity-row" *ngIf='!noSensorData'>
+          <tr *ngFor="let x of sensors">
+            <td>
+              <span (click)="sensorIdClicked(x)" class="buttonlink aqua_color trackId" data-toggle="modal" data-target="#sensorDetails">{{ x.id }} </span>
+            </td>
+            <td>{{ x.name }}</td>
+            <td>
+              <p [ngClass]="getStatusColor(x?.status) ?
+              'green_color' : 'red_color'">{{ x.status }}</p>
+            </td>
+            <td>{{ x.createdAt }}</td>
+            <td>{{ x.updatedAt }}</td>
+            <!-- <td *ngIf="user?.type === 'PRODUCER'">
+              <button (click)="editEntity(x)" class="buttonsmall" data-toggle="modal" data-target="#editEntity">
+                <span>
+                  <img src="assets/SVGs/edit_dark.svg">
+                </span>
+              </button>
+            </td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <br>
+  </div>
+
+
+  <div class="row margin5 padding15">
+    <div class="col-sm-2 padding10 entities">
+      <label>TRANSACTIONS</label>
+    </div>
+    <div class="col-sm-8 padding10 scrollablediv">
+
+      <table class="table table-sm table-dark viewtable mainTable">
+        <thead class="entity-row">
+          <tr>
+            <td style="width:18% !important">TRACK ID</td>
+            <td>STATUS</td>
+            <td>FROM</td>
+            <td>TO</td>
+            <td>ENTITY</td>
+            <td>AMOUNT</td>
+            <td style="width: 200px !important;" class="a-center" *ngIf="user?.type === 'SUPPLIER'">SENSOR ALERT</td>
+          </tr>
+        </thead>
+        <div *ngIf='noTransactionData'>
+          <p class="a-center" style="margin-top: 5%">
+            <b>No Data Available</b>
+          </p>
+        </div>
+        <tbody class="table-body entity-row" *ngIf='!noTransactionData'>
+
+          <tr *ngFor="let x of transactions">
+            <td>
+              <span (click)="transactionIdClicked(x)" class="buttonlink aqua_color trackId" data-toggle="modal" data-target="#transactionDetails">{{ x.id }} </span>
+            </td>
+            <td *ngIf="user?.type === 'SUPPLIER'">
+              <p style="padding-left:10px;" [ngClass]="getStatusColor(x?.status) ?
+              'green_color' : 'red_color'">{{ x.status }}</p>
+            </td>
+            <td *ngIf="user?.type !== 'SUPPLIER'">
+              <p style="padding-left:0px;" [ngClass]="getStatusColor(x?.status) ?
+              'green_color' : 'red_color'">{{ x.status }}</p>
+            </td>
+            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_3' : 'padding_left'">{{ x.fromUsername }}</td>
+
+            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_3' : 'padding_left'">{{ x.toUsername }}</td>
+            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_3' : 'padding_left'">{{ x.assetName }}</td>
+            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_2' : 'padding_left'">{{ x.amount }}</td>
+            <td style="width: 200px !important;" class="a-center" *ngIf="user?.type === 'SUPPLIER'">
+              <button (click)="attachSensor(x)" [disabled]="x.status === 'DELIVERED' " class="action-button" data-toggle="modal" data-target="#attachSensor">{{ x.action }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Attach Sensor -->
+  <div class="modal fade" id="attachSensor" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'ACCEPT' ">ATTACH SENSOR
+              </p>
+              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'MARK PICKED' ">CONFIRM PICKUP
+              </p>
+              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'MARK DELIVERED' ">CONFIRM DELIVERY
+              </p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form #attachSensorForm="ngForm">
+            <div class="row padding10">
+              <div class="col-sm-12 padding10">
+                <input type="text" class="popupinput" [(ngModel)]="updateTransactionModal.transactionId" [disabled]=true placeholder="Transaction Id"
+                  name='transactionId' #name='ngModel' required>
+              </div>
+              <div class="col-sm-12 padding10 " *ngIf="updateTransactionModal?.action === 'ACCEPT' ">
+                <select [(ngModel)]="sensorName" name="type" (change)='getSelectedSensor(sensorName)' required>
+                  <option value="undefined" disabled selected>Select a sensor</option>
+                  <option *ngFor="let sensor of availableSensors" [ngValue]="sensor.id">{{sensor.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row  padding10">
+              <div class="col-sm-8">
+              </div>
+              <div class="col-sm-6">
+                <button (click)="acceptSensor(updateTransactionModal.action)" class="buttonlink float-right">CONFIRM
+                  <span>
+                    <img src="assets/SVGs/arrow_dark.svg">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Add Sensor -->
+  <div class="modal fade" id="addSensor" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10 ">ADD SENSOR</p>
+              <button type="button" class="close" (click)='closeAddSensorModal()' data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form #addSensorForm="ngForm">
+            <div class="row padding10">
+              <div class="col-sm-12 padding10">
+                <input type="text" class="popupinput" [(ngModel)]="addSensorModal.address" [disabled]=true placeholder="Address" name='address'
+                  #address='ngModel' required>
+
+              </div>
+              <div class="col-sm-12 padding10 ">
+                <input type="text" class="popupinput" [(ngModel)]="addSensorModal.name" placeholder="Name" name='name' #name='ngModel' required>
+                <small *ngIf="name.errors && (name.dirty || name.touched)" class="error-message">
+                  <div class="validation-msg" [hidden]="!name.errors.required">
+                    Name is required.
+                  </div>
+                </small>
+              </div>
+            </div>
+            <div class="row  padding10">
+              <div class="col-sm-8">
+              </div>
+              <div class="col-sm-4">
+                <button (click)="addSensor()" class="buttonlink float-right" [disabled]="!addSensorForm.form.valid" data-dismiss="modal">Add
+                  <span>
+                    <img src="assets/SVGs/arrow_dark.svg">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="addEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10 ">ADD ENTITY</p>
+              <button type="button" class="close" (click)='closeAddModal()' data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form #addEntityForm="ngForm">
+            <div class="row padding10">
+              <div class="col-sm-4">
+                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.name" placeholder="Name" name='name' #name='ngModel' required>
+                <small *ngIf="name.errors && (name.dirty || name.touched)" class="error-message">
+                  <div class="validation-msg" [hidden]="!name.errors.required">
+                    Name is required.
+                  </div>
+                </small>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.value" placeholder="Value" name='value' #value='ngModel'
+                  required>
+                <small *ngIf="value.errors && (value.dirty || value.touched)" class="error-message">
+                  <div class="validation-msg" [hidden]="!value.errors.required">
+                    Value is required.
+                  </div>
+                </small>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.quantity" pattern="[0-9]+" placeholder="Quantity" name='quantity'
+                  #quantity='ngModel' required>
+                <small *ngIf="quantity.errors && (quantity.dirty || quantity.touched)" class="error-message">
+                  <div class="validation-msg" [hidden]="!quantity.errors.required">
+                    Quantity is required.
+                  </div>
+                  <div class="validation-msg" [hidden]="!quantity.errors.pattern">
+                    Please enter number only.
+                  </div>
+                </small>
+              </div>
+            </div>
+            <div class="row  padding10">
+              <div class="col-sm-8">
+              </div>
+              <div class="col-sm-4">
+                <button (click)="addEntity()" class="buttonlink float-right" [disabled]="!addEntityForm.form.valid" data-dismiss="modal">Add
+                  <span>
+                    <img src="assets/SVGs/arrow_dark.svg">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--Edit Modal -->
+  <div class="modal fade" id="editEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="">
+          <div class="modal-header">
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl10">EDIT ENTITY</p>
+                <button type="button" class="close" (click)='closeEditModal()' data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <form #editEntityForm="ngForm">
+
+              <div class="row padding10">
+                <div class="col-sm-6">
+                  <input type="text" class="popupinput" [(ngModel)]="editEntityModal.value" placeholder="Value" name='editValue' #editValue='ngModel'
+                    required>
+                  <small *ngIf="editValue.errors && (editValue.dirty || editValue.touched)" class="error-message">
+                    <div class="value-validation-msg" [hidden]="!editValue.errors.required">
+                      Value is required.
+                    </div>
+                  </small>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" class="popupinput float-left" [(ngModel)]="editEntityModal.quantity" pattern="[0-9]+" placeholder="Quantity"
+                    name='editQuantity' #editQuantity='ngModel' required>
+                  <small *ngIf="editQuantity.errors && (editQuantity.dirty || editQuantity.touched)" class="error-message">
+                    <div [hidden]="!editQuantity.errors.required">
+                      Quantity is required.
+                    </div>
+                    <div [hidden]="!editQuantity.errors.pattern">
+                      Please enter number only.
+                    </div>
+                  </small>
+                </div>
+              </div>
+              <div class="row  padding10">
+                <div class="col-sm-8">
+                </div>
+                <div class="col-sm-4">
+                  <button (click)="updateEntity()" class="buttonlink float-right" [disabled]="!editEntityForm.form.valid" data-dismiss="modal">Edit
+                    <span>
+                      <img src="assets/SVGs/arrow_dark.svg">
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Transact Modal -->
+  <div class="modal fade" id="transactEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="">
+          <div class="modal-header">
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl10">CONFIRM TRANSACTION</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="row  padding10">
+              <table style="margin-left:auto; margin-right:auto" id="transactTable">
+                <tr>
+                  <td>
+                    <label class="transparentBG float-left">TYPE</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">ENTITY</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">QUANTITY</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">VALUE</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">OWNER</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p class="transparentBG float-left">{{transact?.type}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{transact?.name}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left" style="padding-left:45px;">{{transact?.quantity}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left" style="padding-left:15px;">{{transact?.value}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{transact?.owner}}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label class="transparentBG float-left">DATE</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">SUPPLIER</label>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>
+                    <p class="transparentBG float-left">{{transact?.date}}</p>
+                  </td>
+                  <td>
+                    <select [(ngModel)]="supplierName" name="type" (change)='getSelectedSupplier(supplierName)' required>
+                      <option value="undefined" disabled selected>Select a supplier</option>
+                      <option *ngFor="let supplier of suppliers" [ngValue]="supplier.address">{{supplier.name}}</option>
+                    </select>
+                  </td>
+
+                </tr>
+              </table>
+            </div>
+            <div class="row  padding10">
+              <div class="col-sm-8">
+              </div>
+              <div class="col-sm-4">
+                <button (click)="transactionConfirmation()" class="buttonlink float-right">Confirm
+                  <span>
+                    <img src="assets/SVGs/arrow_dark.svg">
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--Edit Modal -->
+  <div class="modal fade" id="entityDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="">
+          <div class="modal-header">
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl10">ENTITY DETAILS</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="row  padding10">
+              <table id="transactTable">
+                <tr>
+                  <td>
+                    <label class="transparentBG float-left">OWNER</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">ENTITY NAME</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">QUANTITY</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">VALUE</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">ENTITY ID</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p class="transparentBG float-left">{{entity?.username}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{entity?.name}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG text-center">{{entity?.quantity}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left padding15" style="padding-left:20px;">{{entity?.value}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left trackId">{{entity?.id}}</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--Transaction Details Modal -->
+  <div class="modal fade" id="transactionDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="">
+          <div class="modal-header">
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl5 ">TRANSACTION DETAILS</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="row  padding10">
+              <table id="transactTable">
+                <tr>
+                  <td>
+                    <label class="transparentBG float-left">TRACK ID</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">STATUS</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">FROM</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">TO</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">ENTITY NAME</label>
+                  </td>
+                  <!-- <td>
+                    <label class="transparentBG float-left">SUPPLIER</label>
+                  </td> -->
+                  <td>
+                    <label class="transparentBG float-left">UPDATED AT</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p class="transparentBG float-left trackId">{{transaction?.id}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left" [ngClass]="getStatusColor(transaction?.status) ?
+                    'green_color' : 'red_color'">{{transaction?.status}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{transaction?.fromUsername}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{transaction?.toUsername}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{transaction?.assetName}}</p>
+                  </td>
+                  <!-- <td class="transTo">
+                    <span class="buttonlink aqua_color transparentBG float-left">{{transactsion?.supplier}}</span>
+                  </td> -->
+                  <td>
+                    <p class="transparentBG float-left">{{transaction?.updatedAt}}</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl5">SENSOR DETAILS</p>
+              </div>
+            </div>
+            <div>
+              <table id="transactTable">
+                <tr>
+                  <td>
+                    <label class="transparentBG float-left">SENSOR ID</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">NAME</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">STATUS</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">UPDATED AT</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">SUPPLIER</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p class="transparentBG float-left transTo">{{sensor?.id}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{sensor?.name}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left" [ngClass]="getStatusColor(sensor?.status) ?
+                    'green_color' : 'red_color'">{{sensor?.status}}</p>
+                  </td>
+                  <!-- <td>
+                         <span (click)="sensorIdClicked(transact?.sensorId)" class="buttonlink aqua_color transparentBG float-left">{{transact?.sensorId}}</span>
+                       </td> -->
+                  <td>
+                    <p class="transparentBG float-left">{{sensor?.updatedAt}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{sensor?.supplierName}}</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <br>
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl5">TELEMETRY DETAILS</p>
+              </div>
+            </div>
+
+            <div class="row  padding10">
+              <!-- <table id="transactTable" class="table table-bordered"> -->
+              <table class="table table-sm table-dark viewtable">
+                <thead class="entity-row">
+                  <tr>
+                    <td>WEIGHT </td>
+                    <td>TEMPERATURE</td>
+                    <td>LATITUDE</td>
+                    <td>LONGITUDE</td>
+                    <td>LOCATION</td>
+                  </tr>
+                </thead>
+                <div *ngIf='noTelemetryData'>
+                  <p class="a-center" style="margin-top: 5%">
+                    <b>No Data Available</b>
+                  </p>
+                </div>
+                <tbody class="table-body entity-row" *ngIf='!noTelemetryData'>
+
+                  <tr *ngFor="let x of transactionTelemetries">
+                    <td> {{ x.weight }} </td>
+                    <td>{{ x.temperature }}</td>
+                    <td>{{ x.latitude }}</td>
+                    <td>{{ x.longitude }}</td>
+                    <td>{{ x.place }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row  padding10 " *ngIf='!noTelemetryData'>
+              <div id='transactionMap' #transactionMap class="padding10 map"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--Sensor Details Modal -->
+  <div class="modal fade" id="sensorDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content text-center popupcontainer">
+        <div class="">
+          <div class="modal-header">
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl10 ">SENSOR DETAILS</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="row  padding10">
+              <table id="transactTable">
+                <tr>
+                  <td>
+                    <label class="transparentBG float-left">SENSOR ID</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">NAME</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">STATUS</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">TRANSACTION ID</label>
+                  </td>
+                  <td>
+                    <label class="transparentBG float-left">UPDATED AT</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="transTo">
+                    <p class="transparentBG float-left">{{sensor?.id}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{sensor?.name}}</p>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left" [ngClass]="getStatusColor(sensor?.status) ?
+                    'green_color' : 'red_color'">{{sensor?.status}}</p>
+                  </td>
+                  <td>
+                    <span class="transTo">{{sensor?.trackId}}</span>
+                  </td>
+                  <td>
+                    <p class="transparentBG float-left">{{sensor?.updatedAt}}</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <br>
+
+            <div class="row  padding10">
+              <div class="col-sm-12">
+                <p class="float-left popupHeading marginl10">TELEMETRY DETAILS</p>
+              </div>
+            </div>
+            <div class="row  padding10">
+              <table class="table table-sm table-dark viewtable">
+                <thead class="entity-row">
+                  <tr>
+                    <td>WEIGHT </td>
+                    <td>TEMPERATURE</td>
+                    <td>LATITUDE</td>
+                    <td>LONGITUDE</td>
+                    <td>LOCATION</td>
+                  </tr>
+                </thead>
+                <div *ngIf='noSensorTelemetryData'>
+                  <p class="a-center" style="margin-top: 5%">
+                    <b>No Data Available</b>
+                  </p>
+                </div>
+                <tbody class="table-body entity-row" *ngIf='!noSensorTelemetryData'>
+
+                  <tr *ngFor="let x of sensorTelemetries">
+                    <td> {{ x.weight }} </td>
+                    <td>{{ x.temperature }}</td>
+                    <td>{{ x.latitude }}</td>
+                    <td>{{ x.longitude }}</td>
+                    <td>{{ x.place }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row  padding10 " *ngIf='!noSensorTelemetryData'>
+              <div id='sensorMap' #sensorMap class="padding10 map"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,100 @@
+<div class="preloader" [hidden]="!waiting"></div>
+
+<div class="jumbotron text-center maincontainer">
+  <form #signupForm="ngForm">
+    <table class="table-condensed" style="margin-left:auto; margin-right:auto">
+      <tr>
+        <td>
+          <input type="text" [(ngModel)]="signup.name" placeholder="Full Name" name="name" #name='ngModel' required>
+          <small *ngIf="name.errors && (name.dirty || name.touched)" class="error-message">
+            <div [hidden]="!name.errors.required">
+              Full Name is required.
+            </div>
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" [(ngModel)]="signup.email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" placeholder="Email"
+            name="email" #email='ngModel' required>
+          <small *ngIf="email.errors && (email.dirty || email.touched)" class="error-message">
+            <div [hidden]="!email.errors.required">
+              Email is required.
+            </div>
+            <div [hidden]="!email.errors.pattern">
+              Email is invalid.
+            </div>
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" [(ngModel)]="signup.username" placeholder="Username" name="username" #username='ngModel' required>
+          <small *ngIf="username.errors && (username.dirty || username.touched)" class="error-message">
+            <div [hidden]="!username.errors.required">
+              Username is required.
+            </div>
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="password" minlength="8" [(ngModel)]="signup.password" placeholder="Password" name="password" #password='ngModel'
+            required>
+          <small *ngIf="password.errors && (password.dirty || password.touched)" class="error-message">
+            <div [hidden]="!password.errors.required">
+              password is required.
+            </div>
+            <div [hidden]="!password.errors.minlength">
+              Password must be 8 characters long
+            </div>
+          </small>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <select [(ngModel)]="categoryType" name="type" (change)='getSelectedCategory(categoryType)' required>
+            <option value="undefined"  disabled selected>Select a category</option>
+            <option *ngFor="let category of categoryTypes" [ngValue]="category.id">{{category.type}}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button (click)="signUp()" class="btn btn-primary buttonlarge float-right" type="submit" [disabled]="!signupForm.form.valid">Sign Up</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button routerLink='/login' class="buttonlink float-right">Login
+            <span>
+              <img src="assets/SVGs/arrow_dark.svg">
+            </span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div *ngIf="errorShow" class="error">
+            Authentication Failure
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<!-- <div class="jumbotron text-center maincontainer">
+  <div>
+    <input [(ngModel)]="signup.name" placeholder="Name" />
+    <input [(ngModel)]="signup.email" placeholder="Email" />
+    <input [(ngModel)]="signup.username" placeholder="Username" />
+    <input [(ngModel)]="signup.password" placeholder="Password" />
+    <input [(ngModel)]="signup.type" placeholder="Type" />
+  </div>
+  <div>
+    <button (click)="signupcheck()">Signup</button>
+    <a routerLink='/login'>
+      <button>Login</button>
+    </a>
+  </div>
+</div> -->
