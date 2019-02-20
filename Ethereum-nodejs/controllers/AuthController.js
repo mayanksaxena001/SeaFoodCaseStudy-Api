@@ -108,8 +108,13 @@ module.exports = {
       if (!user) return res.status(404).send("No user found.");
       user.password = '';
       // user.account = '';
-      var _user = await _contract.getUserByAddress(user.account);
-      user.balance = _user[2].toNumber(); //_balance
+      try{
+        var _user = await _contract.getUserByAddress(user.account);
+        user.balance = _user[2].toNumber(); //_balance
+      }catch(err){
+        console.error(err);
+        user.balance = 'NA'
+      }
       res.status(200).send(user);
     } catch (err) {
       console.error(err);
