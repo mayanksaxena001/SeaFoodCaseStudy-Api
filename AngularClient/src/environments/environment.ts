@@ -2,8 +2,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 let value = 'http://localhost';
-value = 'http://ec2-13-234-34-69.ap-south-1.compute.amazonaws.com';
-value = 'http://13.127.189.52';
+// value = 'http://ec2-13-234-34-69.ap-south-1.compute.amazonaws.com';
+// value = 'http://13.127.189.52';
 export const environment = {
   production: false,
   blockchainServiceUrl: value + ':8080/api/auth',
