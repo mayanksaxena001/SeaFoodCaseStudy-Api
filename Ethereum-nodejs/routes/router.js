@@ -4,8 +4,8 @@ var AuthApi = require('./auth.router');
 var SensorApi = require('./sensor.router');
 var WalletApi = require('./wallet.router');
 var TokenApi = require('./token.router');
-var express = require('express');
-const router = express.Router();
+// var express = require('express');
+// const router = express.Router();
 module.exports = (app) => {
     app.use('/api/auth', AuthApi);
     app.use('/contract', AssetContractApi);

@@ -3,6 +3,7 @@ var morgan = require('morgan');
 var dotenv = require('dotenv');
 var path = require('path');
 var expressConfig = require('./config/express');
+var auth = require('./controllers/AuthController');
 var sequelize = require('./config/database.seq.config');
 var config = require('./config/config.json');
 var router = require('./routes/router');

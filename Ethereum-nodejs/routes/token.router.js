@@ -2,7 +2,7 @@ var TokenApi = require('../api/TokenApi');
 var auth = require('../controllers/AuthController');
 var express = require('express');
 const router = express.Router();
-router.use('/', auth.checkToken);
+router.use('/', auth.checkToken, auth.isWeb3Connected);
 
 //
 router.post('/transfer', TokenApi.transfer);

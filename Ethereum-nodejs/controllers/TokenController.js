@@ -3,13 +3,22 @@ var contractConfig = require('../config/contract.config');
 
 var artifacts = require('../bin/truffle/latest/contracts/AssetTransfer.json');
 var StandardToken = contract(artifacts);
-var Wallet =  contractConfig.Wallet;
+var Wallet = contractConfig.Wallet;
 
 class TokenController {
   constructor() {
-    this._web3 = contractConfig._web3;
-    this.StandardToken = StandardToken;
-    this.init();
+    try {
+      if (contractConfig.isWeb3Connected()) {
+        this._web3 = contractConfig._web3;
+        this.StandardToken = StandardToken;
+        this.init();
+      } else {
+        console.error("Web3 not connected to any ethereum node over HTTP");
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async init() {
@@ -19,31 +28,31 @@ class TokenController {
     // this._web3.eth.defaultAccount = this._accounts[0];
     this._gas = {
       from: this._accounts[0],
-      gas: contractConfig.getGasLimit()//9000000000000
+      gas: contractConfig.getGasLimit() //9000000000000
     }
   }
 
-  async transfer(_from,_to,_value) {
-    var transaction =  await this._instance.transferFrom(_from,_to,_value,this._gas);
+  async transfer(_from, _to, _value) {
+    var transaction = await this._instance.transferFrom(_from, _to, _value, this._gas);
     return transaction;
   }
 
-  async transferTokens(_from,_to,_value) {
-    var transaction =  await this._instance.transferTokens(_from,_to,_value,this._gas);
+  async transferTokens(_from, _to, _value) {
+    var transaction = await this._instance.transferTokens(_from, _to, _value, this._gas);
     return transaction;
   }
 
-  async allowed(_owner,_spender) {
-    var transaction =  await this._instance.allowance(_owner,_spender,this._gas);
+  async allowed(_owner, _spender) {
+    var transaction = await this._instance.allowance(_owner, _spender, this._gas);
     return transaction;
   }
 
   async mintTokens(_value) {
-    var transaction = await this._instance.mint(_value,this._gas);
+    var transaction = await this._instance.mint(_value, this._gas);
     return transaction;
   }
 
-  async getTokenDetails(){
+  async getTokenDetails() {
     var details = await this._instance.tokenDetails();
     return details;
   }

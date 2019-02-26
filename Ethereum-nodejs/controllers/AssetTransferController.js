@@ -12,9 +12,18 @@ var transactionData = new Array();
 var supplierAlert = new Array();
 class AssetTransferController {
     constructor() {
-        this._web3 = contractConfig._web3;
-        this.AssetTransferContract = AssetTransferContract;
-        this.init();
+        try {
+            if (contractConfig.isWeb3Connected()) {
+                this._web3 = contractConfig._web3;
+                this.AssetTransferContract = AssetTransferContract;
+                this.init();
+            } else {
+                console.error("Web3 not connected to any ethereum node over HTTP");
+                return;
+            }
+        } catch (err) {
+            console.error(err);
+        }
         // console.log("Sending Ether ==========================================");
         // EthSendTransaction.sendEther();
         // console.log("Ether Sent ==========================================");
@@ -111,15 +120,12 @@ class AssetTransferController {
         console.log(param + " : ", msg);
     }
 
-    isWeb3Connected() {
-        return this._web3.isConnected();
-    }
-
     async createNewAccount(address, _username, _password, _type, menmonic) {
         try {
             return await this.insertUser(address, _username, _type);
         } catch (err) {
-            throw new Error(err);createNewAccount
+            throw new Error(err);
+            createNewAccount
         };
     }
 

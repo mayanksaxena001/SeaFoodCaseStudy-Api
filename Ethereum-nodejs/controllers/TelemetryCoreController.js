@@ -13,9 +13,18 @@ var sensorAdd = new Array();
 var sensorTelemetry = new Array();
 class TelemetryCoreController {
     constructor() {
-        this._web3 = contractConfig._web3;
-        this.TelemetryCoreContract = TelemetryCoreContract;
-        this.init();
+        try {
+            if (contractConfig.isWeb3Connected()) {
+                this._web3 = contractConfig._web3;
+                this.TelemetryCoreContract = TelemetryCoreContract;
+                this.init();
+            } else {
+                console.error("Web3 not connected to any ethereum node over HTTP");
+                return;
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     async init() {
@@ -35,11 +44,11 @@ class TelemetryCoreController {
         this.toConsole("LogSensorAddedEvent", this._logSensorAddedEvent);
         this.toConsole("LogSensorTelemetryEvent", this._logSensorTelemetryEvent);
         this.toConsole("LogSensorUpdateEvent", this._logSensorUpdateEvent);
-        
+
         this.watch(this._logSensorAddedEvent);
         this.watch(this._logSensorTelemetryEvent);
         this.watch(this._logSensorUpdateEvent);
-       
+
     }
 
     watch(event) {
@@ -51,11 +60,9 @@ class TelemetryCoreController {
             console.log("Event ## ", result);
             if (result.event == 'LogSensorAddedEvent') {
                 sensorAdd.push(result.args);
-            }
-            else if (result.event == 'LogSensorTelemetryEvent') {
+            } else if (result.event == 'LogSensorTelemetryEvent') {
                 sensorTelemetry.push(result.args);
-            }
-            else if (result.event == 'LogSensorUpdateEvent') {
+            } else if (result.event == 'LogSensorUpdateEvent') {
                 sensorUpdate.push(result.args);
             }
         });
@@ -68,15 +75,11 @@ class TelemetryCoreController {
         console.log(param + " : ", msg);
     }
 
-    isWeb3Connected() {
-        return this._web3.isConnected();
-    }
-
-    async addSensor(_address, _name,_username) {
+    async addSensor(_address, _name, _username) {
         if (!_address || !_name || !_username) {
             throw new Error("missing details");
         }
-        await this._instance.addSensor(_address, _name, _username,this._gas);
+        await this._instance.addSensor(_address, _name, _username, this._gas);
     }
 
     async getSensors(_address) {
@@ -84,8 +87,8 @@ class TelemetryCoreController {
             throw new Error("Unknown address ");
         }
         var sensors = new Array();
-        var arr = await this._instance.getSensorsByAddress(_address,this._gas);
-        for(var i =0 ;i<arr.length;i++){
+        var arr = await this._instance.getSensorsByAddress(_address, this._gas);
+        for (var i = 0; i < arr.length; i++) {
             var sensor = await this.getSensorById(arr[i]);
             sensors.push(sensor);
         }
@@ -116,7 +119,7 @@ class TelemetryCoreController {
         }
         var telemetries = new Array();
         var arr = await this._instance.getSensorTelemetries(_id);
-        for(var i =0 ;i<arr.length;i++){
+        for (var i = 0; i < arr.length; i++) {
             var telemetry = await this.getTelemetryById(arr[i]);
             telemetries.push(telemetry);
         }
@@ -129,7 +132,7 @@ class TelemetryCoreController {
         }
         var telemetries = new Array();
         var arr = await this._instance.getTransactionTelemetries(_id);
-        for(var i =0 ;i<arr.length;i++){
+        for (var i = 0; i < arr.length; i++) {
             var telemetry = await this.getTelemetryById(arr[i]);
             telemetries.push(telemetry);
         }
@@ -141,14 +144,14 @@ class TelemetryCoreController {
             throw new Error("Empty Asset id provided");
         }
         var _telemetry = await this._instance.getTelemetryById(_id, this._gas);
-        var telemetry = {} ;
-        telemetry.id =_telemetry[0];
-        telemetry.sensorId =_telemetry[1];
-        telemetry.weight =_telemetry[2].toNumber();
-        telemetry.temperature =_telemetry[3].toNumber();
-        telemetry.latitude =_telemetry[4];
-        telemetry.longitude =_telemetry[5];
-        telemetry.place =_telemetry[6];
+        var telemetry = {};
+        telemetry.id = _telemetry[0];
+        telemetry.sensorId = _telemetry[1];
+        telemetry.weight = _telemetry[2].toNumber();
+        telemetry.temperature = _telemetry[3].toNumber();
+        telemetry.latitude = _telemetry[4];
+        telemetry.longitude = _telemetry[5];
+        telemetry.place = _telemetry[6];
         telemetry.updatedAt = Util.formatDate(_telemetry[7]);
         return telemetry;
     }
@@ -171,7 +174,7 @@ class TelemetryCoreController {
         // asset.address = _address;
         return transaction;
     }
-  
+
     async getSensorUpdateEvent() {
         return sensorUpdate;
     }

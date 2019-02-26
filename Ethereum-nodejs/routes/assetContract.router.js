@@ -2,7 +2,7 @@ var AssetTransferApi = require('../api/AssetTransferApi');
 var auth = require('../controllers/AuthController');
 var express = require('express');
 const router = express.Router();
-router.use('/', auth.checkToken);
+router.use('/', auth.checkToken, auth.isWeb3Connected);
 router.param('id', AssetTransferApi.validation_req);
 
 // router.get('/user/:id', SeaFoodContractApi.get_user);

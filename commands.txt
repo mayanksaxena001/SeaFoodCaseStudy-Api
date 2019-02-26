@@ -11,4 +11,8 @@ SELECT plugin FROM mysql.user WHERE User = 'root';
  sudo docker stop test-mysql;
  pm2 logs 0
 
+docker run --detach --name=test-mysql --env="MYSQL_ROOT_PASSWORD=root" --publish 6603:3306 --volume=/root/docker/test-mysql/conf.d:/etc/mysql/conf.d --volume=/home/synerzip/Desktop/docker/mysql-datadir:/var/lib/mysql mysql:5.7
+
+sudo docker image rm c8f0aa27ec96
+sudo docker rmi --x--
 pm2 start server.js

@@ -4,9 +4,9 @@ var TelemetryCore = require('../api/TelemetryCoreApi');
 var auth = require('../controllers/AuthController');
 var express = require('express');
 const router = express.Router();
-router.use('/', auth.checkToken);
+router.use('/', auth.checkToken, auth.isWeb3Connected);
 router.param('id', TelemetryCore.validation_req);
-router.post('/', TelemetryCore.addSensor);//add sensor here
+router.post('/', TelemetryCore.addSensor); //add sensor here
 router.put('/', TelemetryCore.UpdateSensorTelemetry);
 router.get('/', TelemetryCore.getSensors);
 router.get('/:id', TelemetryCore.getSensorById);

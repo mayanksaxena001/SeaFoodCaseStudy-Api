@@ -3,6 +3,7 @@ var contractConfig = require('../config/contract.config');
 
 var artifacts = require('../truffle/build/contracts/StateContract.json');
 var StateContract = contract(artifacts);
+@deprecate
 class StateContractController {
   constructor() {
     this.StateContract = StateContract;

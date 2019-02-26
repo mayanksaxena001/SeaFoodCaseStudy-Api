@@ -13,7 +13,7 @@ var {
 } = require('./AssetTransferController');
 var _contract = assetTransferContract;
 var web3 = require('web3');
-
+var contractConfig = require('../config/contract.config');
 
 module.exports = {
 
@@ -50,7 +50,7 @@ module.exports = {
           throw new Error("Web3 not connected");
         }
         account = await _contract.createNewAccount(_account, req.body.username, hashedPassword, req.body.type, _mnemonic);
-        if(account !== 'undefined'){
+        if (account !== 'undefined') {
           _account = account;
         }
         balance = await _contract.balanceOf(_account);
@@ -70,15 +70,7 @@ module.exports = {
         mnemonic: _mnemonic
       });
       // create a token
-      let token = jwt.sign({
-        //payload
-        id: _user.id,
-        account: _account,
-        role: req.body.type,
-        username: _user.username
-      }, config.secret, {
-        expiresIn: config.TOKEN_EXPIRE_TIME // just playing with it ,expires in 1 min
-      });
+      let token = await module.exports.generateToken(_user.id, _account, _user.type, _user.username);
       await module.exports.saveApiToken(
         'TOKEN_GENERATED',
         _user.id,
@@ -108,12 +100,12 @@ module.exports = {
       if (!user) return res.status(404).send("No user found.");
       user.password = '';
       // user.account = '';
-      try{
+      try {
         var _user = await _contract.getUserByAddress(user.account);
         user.balance = _user[2].toNumber(); //_balance
-      }catch(err){
+      } catch (err) {
         console.error(err);
-        user.balance = 'NA'
+        user.balance = 'NA';
       }
       res.status(200).send(user);
     } catch (err) {
@@ -173,6 +165,16 @@ module.exports = {
     }
   },
 
+  async isWeb3Connected(req, res, callback) {
+    try {
+      if (!contractConfig.isWeb3Connected()) throw new Error("Web3 not connected to any Ethereum node");
+      callback();
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send(err.message);
+    }
+  },
+
   async login(req, res) {
     try {
       var user = await repo.findByUserName(req.body.username);
@@ -192,14 +194,7 @@ module.exports = {
       } catch (err) {
         console.error(err)
       }
-      var token = jwt.sign({
-        id: user.id,
-        account: user.account,
-        role: user.type,
-        username: user.username
-      }, config.secret, {
-        expiresIn: config.TOKEN_EXPIRE_TIME
-      });
+      let token = await module.exports.generateToken(user.id, user.account, user.type, user.username);
       await module.exports.saveApiToken(
         'TOKEN_GENERATED',
         user.id,
@@ -234,6 +229,7 @@ module.exports = {
     }
   },
 
+  //TODO
   async logout(req, res) {
     try {
       // TODO
@@ -250,5 +246,19 @@ module.exports = {
       console.error(err);
       return res.status(500).send(err.message);
     }
+  },
+
+  async generateToken(_id, _account, _type, _username) {
+    // create a token
+    return jwt.sign({
+      //payload
+      id: _id,
+      account: _account,
+      role: _type,
+      username: _username
+    }, config.secret, {
+      // algorithm: "ES256",TODO : use some algo with jwt
+      expiresIn: config.TOKEN_EXPIRE_TIME // just playing with it ,expires in 24h
+    });
   }
 }

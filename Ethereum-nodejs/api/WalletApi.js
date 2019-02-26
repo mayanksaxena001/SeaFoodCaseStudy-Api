@@ -24,6 +24,8 @@ module.exports = {
         try {
             if(!req.body.password) throw new Error("Password required ");
             var user = await repo.findByUserName(req.decoded.username);
+            var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+            if(!passwordIsValid) throw new Error("Password do not mach");
             var privateKey = await Util.getPrivateKeyFromSeed(user.account, user.mnemonic, req.body.password);
             return res.status(200).send(privateKey);
         } catch (err) {

@@ -12,7 +12,7 @@ class ContractController {
   constructor() {
     this._web3 = contractConfig._web3;
     this.SeaFoodContract = SeaFoodContract;
-    this.init();
+   await this.init();
   }
 
   async init() {
