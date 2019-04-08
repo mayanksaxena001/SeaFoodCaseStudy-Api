@@ -22,6 +22,7 @@ export class ApiInterceptor implements HttpInterceptor {
 
         let blockchainWalletUrl = environment.blockchainWalletUrl;
         let blockchainTokenUrl = environment.blockchainTokenUrl;
+        let blockchainTradeUrl = environment.blockchainTradeUrl;
 
         let serviceUrl;
 
@@ -40,6 +41,9 @@ export class ApiInterceptor implements HttpInterceptor {
         else if (JSON.parse(localStorage.getItem('isTokenUrl')) === true) {
             serviceUrl = blockchainTokenUrl;
         }
+        else if (JSON.parse(localStorage.getItem('isTradeUrl')) === true) {
+            serviceUrl = blockchainTradeUrl;
+        }
 
         const apiReq = req.clone({
             url: `${serviceUrl}/${req.url}`,
@@ -51,6 +55,7 @@ export class ApiInterceptor implements HttpInterceptor {
         localStorage.removeItem('isSensorUrl');
         localStorage.removeItem('isWalletUrl');
         localStorage.removeItem('isTokenUrl');
+        localStorage.removeItem('isTradeUrl');
 
         return next.handle(apiReq);
     }

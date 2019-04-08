@@ -3,14 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 let value = 'http://localhost';
 // value = 'http://ec2-13-234-34-69.ap-south-1.compute.amazonaws.com';
-// value = 'http://13.127.189.52';
+// value = 'http://172.19.0.3';
 export const environment = {
   production: false,
   blockchainServiceUrl: value + ':8080/api/auth',
   blockchainContractServiceUrl: value + ':8080/contract',
   blockchainSensorUrl: value + ':8080/sensor',
   blockchainWalletUrl: value + ':8080/wallet',
-  blockchainTokenUrl: value + ':8080/token'
+  blockchainTokenUrl: value + ':8080/token',
+  blockchainTradeUrl: value + ':8080/binance'
 };
 
 /*

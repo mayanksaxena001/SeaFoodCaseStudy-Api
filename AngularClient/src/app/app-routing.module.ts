@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GameComponent } from './game/game.component';
+import { TradeComponent } from './trade/trade.component';
 
 import { AuthGuard } from './auth/auth.guard';
 
@@ -20,6 +21,9 @@ const routes: Routes = [
     },
     {
         path: 'signup', component: SignUpComponent
+    },
+    {
+        path: 'trade', component: TradeComponent
     },
     {
         path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]

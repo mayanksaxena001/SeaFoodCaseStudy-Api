@@ -12,13 +12,16 @@ import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { GameComponent } from './game/game.component';
+import { TradeComponent } from './trade/trade.component';
 
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 
 import { LoginService } from './login/login.service';
 import { DashboardService } from './dashboard/dashboard.service';
-import { GameComponent } from './game/game.component';
+import { GameService } from './game/game.service';
+import { BinanceService } from './trade/binance.service';
 
 
 @NgModule({
@@ -28,7 +31,8 @@ import { GameComponent } from './game/game.component';
     LoginComponent,
     SignUpComponent,
     DashboardComponent,
-    GameComponent
+    GameComponent,
+    TradeComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +43,8 @@ import { GameComponent } from './game/game.component';
   providers: [
     AuthService,
     AuthGuard,
+    GameService,
+    BinanceService,
     LoginService,
     DashboardService,
     {
