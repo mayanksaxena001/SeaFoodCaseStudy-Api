@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   waiting = false;
   user: User;
   profileDetailsVisible = false;
-  navBarVisible: boolean;
+  navBarVisible = false;
   subscription: Subscription;
   tokenValue: number;
 
@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private loginService: LoginService, private router: Router,
     private dashboardService: DashboardService) {
 
-    this.subscription = dashboardService.navBar.subscribe(
+    this.subscription = this.dashboardService.navBar.subscribe(
       navBar => {
 
         this.navBarVisible = navBar;
@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
 
-    this.profileDetailsVisible = false;
+    this.profileDetailsVisible = true;
 
     if (this.navBarVisible) {
       this.user = JSON.parse(localStorage.getItem('UserDetails'));
@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   initialiseData() {
     this.wallet = {
-      address:'',
+      address: '',
       privateKey: '',
       publicKey: '',
       mnemonic: '',
@@ -124,6 +124,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  openTrade() {
+    window.open("http://localhost:8000/trade", "_blank");
+  }
+
   showProfileDetails() {
 
     this.profileDetailsVisible = !this.profileDetailsVisible;
@@ -138,10 +142,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loginService.logout().subscribe(
       (data) => {
         this.waiting = false;
-        this.dashboardService.showNavbar(false);
 
-        localStorage.removeItem('authToken');
-        this.router.navigateByUrl('/login');
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
@@ -152,9 +153,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
 
-        swal('Error!', 'Backend Error while logout', 'error');
+        // swal('Error!', 'Backend Error while logout', 'error');
       }
     );
+    this.dashboardService.showNavbar(false);
+    localStorage.removeItem('authToken');
+    this.router.navigateByUrl('/login');
   }
 
   showRequestTokensForm() {
@@ -343,7 +347,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       selBox.value = this.wallet.hdWalletPath;
     } else if (val === 'mnemonic') {
       selBox.value = this.wallet.mnemonic;
-    }else if (val === 'address') {
+    } else if (val === 'address') {
       selBox.value = this.wallet.address;
     }
 

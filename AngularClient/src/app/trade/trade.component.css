@@ -1,0 +1,52 @@
+.headContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  /* align-items: center; */
+  /* justify-content: space-between; */
+  /* border: 1px dotted black; */
+  height: 100%;
+  padding-right: 10px;
+  /* margin-left: 10px; */
+  /* margin-left: 10px; */
+}
+
+.balanceContainer {
+  /* background: palegreen !important; */
+  /* padding: 10px; */
+  margin-top: 10px;
+  border: 1px double black;
+  height: 30%;
+  width: 100%;
+  flex-grow: 2;
+}
+
+.balanceTable:thead,
+tr,
+tbody {
+  display: contents !important;
+}
+
+.button {
+  background-color: #00b38f;
+  /* Green */
+  border: 1px;
+  width: 100px;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 12px;
+}
+
+tr {
+  display: contents;
+}

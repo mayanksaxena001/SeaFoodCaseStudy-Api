@@ -39,9 +39,7 @@ export class LoginComponent implements OnInit {
         if (data && data.token) {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('loginPassword', this.loginCredentials.password);
-
-          this.router.navigate(['/dashboard']);
-
+          this.router.navigate(['/trade']);
         } else {
           swal('Error!', 'Authentication failed', 'error');
 
@@ -53,7 +51,11 @@ export class LoginComponent implements OnInit {
         if (err.status === 404) {
           swal('Error!', 'User does not exist!', 'error');
 
-        } else {
+        } else if (err.status === 401) {
+          swal('Error!', 'Your Password is Incorrect.Are you unconscious? ', 'error');
+
+        }
+        else {
           if (err.error instanceof Error) {
             console.log('An error occurred: ', err.error.message); // client
           } else {

@@ -1,6 +1,10 @@
+const value = 'https://bitcoincash.org.in/api';
 export const environment = {
   production: true,
-  blockchainServiceUrl: 'https://47d8340a.ngrok.io/api/auth',
-  blockchainContractServiceUrl: 'https://47d8340a.ngrok.io/contract',
-  blockchainSensorUrl: 'https://47d8340a.ngrok.io/sensor'
+  blockchainServiceUrl: value + '/auth',
+  blockchainContractServiceUrl: value + '/contract',
+  blockchainSensorUrl: value + '/sensor',
+  blockchainWalletUrl: value + '/wallet',
+  blockchainTokenUrl: value + '/token',
+  blockchainTradeUrl: value + '/binance'
 };

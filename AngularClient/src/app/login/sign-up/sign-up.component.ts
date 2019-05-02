@@ -74,7 +74,7 @@ export class SignUpComponent implements OnInit {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('loginPassword', this.signup.password);
 
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/trade']);
 
         } else {
           swal('Error!', 'Authentication failed', 'error');
