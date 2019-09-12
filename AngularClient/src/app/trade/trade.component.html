@@ -1,0 +1,257 @@
+<div class="mainContainer">
+  <div class="preloader" [hidden]="!waiting"></div>
+  <div class="headContainer">
+    <button class="btn btn-primary buttonlarge" (click)='fetchCredentials()' style="width:200px;" data-toggle="modal" data-target="#saveCred">Credentials</button>
+    <button class="btn btn-primary buttonlarge" (click)='buyAllFavCoins()' style="width:200px;">Buy All</button>
+    <button class="btn btn-primary buttonlarge" (click)='sellAllCoins()' style="width:200px;">Sell All</button>
+    <button class="btn btn-primary buttonlarge" (click)='fetchMyTrades()' style="width:200px;" data-toggle="modal" data-target="#myTrades">My Trades</button>
+    <button class="btn btn-primary buttonlarge" (click)="refresh()">Refresh </button>
+    <!-- <select name="markets" style="width:200px;">
+    <option value="undefined " disabled selected>Select a base pair</option>
+    <option *ngFor="let pair of markets " [ngValue]="pair ">{{pair}}</option>
+  </select>-->
+  </div>
+  <div class="balanceContainer" *ngIf='hasBalance'>
+    <table class="table table-hover balanceTable ">
+      <thead>
+        <tr>
+          <td>Selected</td>
+          <td class="table-font" style="background: purple;color:white">Asset</td>
+          <td style="background: green;color:white">Available</td>
+          <td style="background: red;color:white">Locked</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of balances">
+          <td>
+            <input type="checkbox" [(ngModel)]="x.selected" (change)="check($event,x)" name="isSelected" />
+          </td>
+          <td style="background: purple;color:white">{{ x.asset}}</td>
+          <td style="background: green;color:white">{{ x.free}}</td>
+          <td style="background: red;color:white">{{ x.locked}}</td>
+        </tr>
+        <!--<td style="background: yellow;width: 20px !important">
+        <span style=" cursor: pointer;" (click)="selectCoin(x)" data-toggle="modal" data-target="#buySell">
+          <img src="assets/SVGs/edit_dark.svg"> 
+          BUY/SELL
+        </span>
+      </td> -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!--Credentials Modal -->
+<div class="modal fade" id="saveCred" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content text-center popupcontainer">
+      <div class="">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10 ">Save Credentials</p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form #credForm="ngForm">
+            <table class="table-condensed" style="margin-left:auto; margin-right:auto">
+              <tr>
+                <td>
+                  <input type="text" [(ngModel)]="cred.api_key" placeholder="Api Key" name='apiKey' #apiKey='ngModel' required>
+                  <small *ngIf="apiKey.errors && (apiKey.dirty || apiKey.touched)" class="error-message">
+                    <div [hidden]="!apiKey.errors.required">
+                      Api Key is required.
+                    </div>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="password" [(ngModel)]="cred.api_secret" placeholder="Api secret" name="apiSecret" #apiSecret='ngModel' required>
+                  <small *ngIf="apiSecret.errors && (apiSecret.dirty || apiSecret.touched)" class="error-message">
+                    <div [hidden]="!apiSecret.errors.required">
+                      Api secret is required.
+                    </div>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" [(ngModel)]="cred.pairs" placeholder="Favourite pairs" name="pairs" #pairs='ngModel'>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="cred.canTrade" placeholder="Can trade" name="canTrade">CanTrade
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="cred.use_server_time" placeholder="Use server time" name="use_server_time">Use server time
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <select [(ngModel)]=" cred.base_currency " name="type " #baseCurrency='ngModel' required>
+                    <option value="undefined " disabled selected>Select a base coin</option>
+                    <option *ngFor="let pair of baseCurrencies " [ngValue]="pair ">{{pair}}</option>
+                  </select>
+                  <small *ngIf="baseCurrency.errors && (baseCurrency.dirty || baseCurrency.touched) " class="error-message ">
+                    <div [hidden]="!baseCurrency.errors.required ">
+                      Please set a base currency .
+                    </div>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button type="submit " [disabled]="!credForm.form.dirty" (click)="saveCredentials()" data-dismiss="modal" class="btn btn-primary buttonlarge float-right
+                    ">Save</button>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <!-- <div class="row padding10 " *ngIf='!noSensorTelemetryData'>
+          <div id='sensorMap' #sensorMap class="padding10 map "></div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="buySell" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content text-center popupcontainer">
+      <div class="">
+        <div class="modal-header">
+          <div class="row  padding10">
+            <div class="col-sm-12">
+              <p class="float-left popupHeading marginl10 ">Buy/Sell</p>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <p> Under construction</p>
+          <!-- <form #credForm="ngForm">
+            <table class="table-condensed" style="margin-left:auto; margin-right:auto">
+              <tr>
+                <td>
+                  <input type="text" [(ngModel)]="cred.api_key" placeholder="Api Key" name='apiKey' #apiKey='ngModel' required>
+                  <small *ngIf="apiKey.errors && (apiKey.dirty || apiKey.touched)" class="error-message">
+                    <div [hidden]="!apiKey.errors.required">
+                      Api Key is required.
+                    </div>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="password" [(ngModel)]="cred.api_secret" placeholder="Api secret" name="apiSecret" #apiSecret='ngModel' required>
+                  <small *ngIf="apiSecret.errors && (apiSecret.dirty || apiSecret.touched)" class="error-message">
+                    <div [hidden]="!apiSecret.errors.required">
+                      Api secret is required.
+                    </div>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" [(ngModel)]="cred.pairs" placeholder="Favourite pairs" name="pairs" #pairs='ngModel'>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="cred.canTrade" placeholder="Can trade" name="canTrade">CanTrade
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="cred.use_server_time" placeholder="Use server time" name="use_server_time">Use server time
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <select [(ngModel)]=" cred.base_currency " name="type " #baseCurrency='ngModel' required>
+                    <option value="undefined " disabled selected>Select a base coin</option>
+                    <option *ngFor="let pair of baseCurrencies " [ngValue]="pair ">{{pair}}</option>
+                  </select>
+                  <small *ngIf="baseCurrency.errors && (baseCurrency.dirty || baseCurrency.touched) " class="error-message ">
+                    <div [hidden]="!baseCurrency.errors.required ">
+                      Please set a base currency .
+                    </div>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button type="submit " [disabled]="!credForm.form.dirty" (click)="saveCredentials()" data-dismiss="modal" class="btn btn-primary buttonlarge float-right
+                      ">Save</button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div *ngIf="errorShow " class="error ">
+                    Something went wrong !
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </form> -->
+        </div>
+        <!-- <div class="row padding10 " *ngIf='!noSensorTelemetryData'>
+            <div id='sensorMap' #sensorMap class="padding10 map "></div>
+          </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myTrades" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content ">
+      <div class="modal-header">
+        <div class="row  padding10">
+          <div class="col-sm-12">
+            <p class="float-left popupHeading marginl10 ">My Trades</p>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover ">
+          <thead>
+            <tr>
+              <td class="float-left">Id </td>
+              <td class="float-left">Binance Id</td>
+              <td class="float-left">Order Id</td>
+              <td class="float-left">Client Order Id</td>
+              <td class="float-left">Symbol</td>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr *ngFor="let x of myTrades">
+              <td> {{ x.id }} </td>
+              <td>{{ x.binance_id }}</td>
+              <td>{{ x.order_id }}</td>
+              <td>{{ x.client_order_id }}</td>
+              <td>{{ x.symbol }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+@-ms-viewport {
+    width: device-width;
+  }
+  
+  /* Only use vertical-align in FF */
+  @-moz-document url-prefix() {
+      .square {
+          vertical-align: top;
+      }
+  }
+  
+  body {
+      font-family: Futura, sans-serif;
+      text-align: center;
+      margin: 0;
+  }
+  
+  .title {
+      font-size: 2em;
+      padding: 20px 0;
+  }
+  
+  .board-container {
+      border-top: 2px solid black;
+      border-bottom: 2px solid black;
+      padding-bottom: 50px;
+  }
+  
+  form {
+      margin-top: 40px;
+  }
+  
+  .add-board {
+      margin-bottom: 40px;
+  }
+  
+  .board-size {
+      width: 40px;
+      font-family: Futura, sans-serif;
+      font-size: 1em;
+      border: 2px dotted black;
+      padding: 5px;
+      text-align: center;
+  }
+  
+  .reset {
+      margin-top: 20px;
+  }
+  
+  .reset,
+  .add-board {
+      background-color: white;
+      border: 2px solid black;
+      font-size: 1.25em;
+      font-family: Futura, sans-serif;
+      cursor: pointer;
+  }
+  
+  .reset:hover,
+  .add-board:hover {
+      background-color: magenta;
+  }
+  
+  .game-message {
+      font-size: 1.5em;
+      padding: 20px 0 40px;
+  }
+  
+  .board {
+      width: 90%;
+      height: 90%;
+      margin: 0 auto;
+  }
+  
+  /* Fix for inline-block 4px gap */
+  .row {
+      margin-bottom: -4px;
+  }
+  
+  .square {
+      width: 90px;
+      height: 90px;
+      display: inline-block;
+      display: -moz-inline-stack;
+      text-align: center;
+      line-height: 1.75em;
+      font-size: 3em;
+      border-top: .15em solid black;
+      border-bottom: .15em solid black;
+      border-left: .125em solid black;
+      border-right: .125em solid black;
+      overflow: hidden;
+  }
+  
+  .row .square:first-child,
+  .row:first-child .square:first-child,
+  .row:last-child .square:first-child {
+      border-left: none;
+  }
+  
+  .row .square:last-child,
+  .row:first-child .square:last-child,
+  .row:last-child .square:last-child {
+      border-right: none;
+  }
+  
+  .row:first-child .square {
+      border-top: none;
+  }
+  
+  .row:last-child .square {
+      border-bottom: none;
+  }
+  
+  .X {
+      color: cyan;
+  }
+  
+  .O {
+      color: yellow;
+  }
+  
+  .winner {
+      color: magenta;
+  }
+  
+  .X.winner,
+  .O.winner {
+      transition-property: transform;
+      transition-duration: 2s;
+      transition-timing-function: ease;
+      transition-delay: 0s;
+  }
+  
+  .X.winner {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+  
+  .O.winner {
+      -webkit-transform: rotateY(360deg);
+      transform: rotateY(360deg);
+  }
+  
