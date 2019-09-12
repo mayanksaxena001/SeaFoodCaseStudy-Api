@@ -38,7 +38,11 @@ module.exports = class ApiToken extends SequelizeModel {
                 defaultValue: true
             },
             token: {
+
                 type: Sequelize.STRING,
+
+                type: Sequelize.TEXT,
+
                 // TODO:For time being,allowNull: false
             },
 

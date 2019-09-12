@@ -3,7 +3,9 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config/config');
 var UserRepository = require('../mysql/db/user.repository');
+var ApiTokenRepository = require('../mysql/db/apitoken.repository');
 const repo = new UserRepository();
+const apiTokenRepo = new ApiTokenRepository();
 var Promise = require('bluebird');
 var Util = require('./Util');
 var {
@@ -11,7 +13,7 @@ var {
 } = require('./AssetTransferController');
 var _contract = assetTransferContract;
 var web3 = require('web3');
-
+var contractConfig = require('../config/contract.config');
 
 module.exports = {
 
@@ -30,7 +32,7 @@ module.exports = {
     res.render('index');
   },
 
-  async registerJWT(req, res) {
+  async register(req, res) {
     try {
       var hashedPassword = bcrypt.hashSync(req.body.password, 8);
       if (!req.body.name || !req.body.username || !req.body.email) throw new Error('Insufficient Info');
@@ -40,14 +42,23 @@ module.exports = {
        // var _account = web3.prototype.sha3(req.body.username);
        // var _account = web3.utils.randomHex(16);
        */
-      if (!_contract.isWeb3Connected()) {
-        throw new Error("Web3 not connected");
+      let _mnemonic = await Util.generateHDWalletMenemonic();
+      let _account = await Util.getAddress(_mnemonic, 0, req.body.password);
+      let _balance = 0;
+      try {
+        if (!_contract.isWeb3Connected()) {
+          throw new Error("Web3 not connected");
+        }
+        account = await _contract.createNewAccount(_account, req.body.username, hashedPassword, req.body.type, _mnemonic);
+        if (account !== 'undefined') {
+          _account = account;
+        }
+        balance = await _contract.balanceOf(_account);
+        _balance = _balance.toNumber();
+      } catch (error) {
+        console.log(error);
       }
-      var _mnemonic = await Util.generateHDWalletMenemonic();
-      var _account = await _contract.createNewAccount(req.body.username, req.body.password, req.body.type,_mnemonic);
-      var _balance = await _contract.balanceOf(_account);
-      _balance = _balance.toNumber();
-      var _user = await repo.create({
+      let _user = await repo.create({
         name: req.body.name,
         username: req.body.username,
         email: req.body.email,
@@ -56,18 +67,18 @@ module.exports = {
         type: req.body.type,
         active: true,
         balance: _balance,
-        mnemonic:_mnemonic
+        mnemonic: _mnemonic
       });
       // create a token
-      var token = jwt.sign({
-        //payload
-        id: _user.id,
-        account: _account,
-        role: req.body.type,
-        username: _user.username
-      }, config.secret, {
-        expiresIn: config.TOKEN_EXPIRE_TIME // just playing with it ,expires in 1 min
-      });
+      let token = await module.exports.generateToken(_user.id, _account, _user.type, _user.username);
+      await module.exports.saveApiToken(
+        'TOKEN_GENERATED',
+        _user.id,
+        true,
+        token,
+        req.originalUrl,
+        req.method
+      );
       res.status(200).send({
         auth: true,
         token: token
@@ -75,6 +86,7 @@ module.exports = {
       // console.log(res);
 
     } catch (err) {
+      console.error(err);
       res.status(500).send(err.message);
     };
 
@@ -88,22 +100,31 @@ module.exports = {
       if (!user) return res.status(404).send("No user found.");
       user.password = '';
       // user.account = '';
-      var _user = await _contract.getUserByAddress(user.account);
-      user.balance = _user[2].toNumber(); //_balance
+      try {
+        var _user = await _contract.getUserByAddress(user.account);
+        user.balance = _user[2].toNumber(); //_balance
+      } catch (err) {
+        console.error(err);
+        user.balance = 'NA';
+      }
       res.status(200).send(user);
     } catch (err) {
-      res.status(500).send(err);
+      console.error(err);
+      res.status(500).send(err.message);
     }
   },
 
   async updateUser(req, res) {
     try {
+      var passwordIsValid = Util.verifyPassword(req.decoded.username, req.body.password);
+      if (!passwordIsValid) throw new Error('Password do not match!');
       await repo.update(req.body, req.decoded.id);
       res.status(200).send({
         succes: true
       });
     } catch (err) {
-      res.status(500).send(err);
+      console.error(err);
+      res.status(500).send(err.message);
     };
   },
 
@@ -120,49 +141,95 @@ module.exports = {
       var decoded = await jwtVerifyAsync(token, config.secret);
       if (decoded) {
         var user = await repo.getById(decoded.id);
-        if (!user.active) return res.status(500).send("Invalid token , User is inactive")
+        if (!user) throw new Error("User is not registered or might not be active");
+
+        await module.exports.saveApiToken(
+          'CHECK_TOKEN',
+          user.id,
+          true,
+          token,
+          req.originalUrl,
+          req.method
+        );
+
+        if (!user.active) return res.status(500).send("Invalid token , User is inactive");
         req.decoded = decoded;
         callback();
       } else {
-        throw new Error('Invalid session . No user Found');
+        throw new Error('Invalid session');
       }
     } catch (err) {
-      return res.status(500).send(err);
+      console.error(err);
+      return res.status(500).send(err.message);
 
+    }
+  },
+
+  async isWeb3Connected(req, res, callback) {
+    try {
+      if (!contractConfig.isWeb3Connected()) throw new Error("Web3 not connected to any Ethereum node");
+      callback();
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send(err.message);
     }
   },
 
   async login(req, res) {
     try {
       var user = await repo.findByUserName(req.body.username);
-      if (!user) return res.status(404).send('No user found.');
+      if (!user) return res.status(404).send('User Not Found');;
       var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
       if (!passwordIsValid) return res.status(401).send({
         auth: false,
         token: null
       });
-      var _balance = await _contract.balanceOf(user.account);
-      await repo.update({
-        active: true,
-        balance: _balance.toNumber()
-      }, user.id);
-      var token = jwt.sign({
-        id: user.id,
-        account: user.account,
-        role: user.type,
-        username: user.username
-      }, config.secret, {
-        expiresIn: config.TOKEN_EXPIRE_TIME
-      });
+      try {
+
+        var _balance = await _contract.balanceOf(user.account);
+        await repo.update({
+          active: true,
+          balance: _balance.toNumber()
+        }, user.id);
+      } catch (err) {
+        console.error(err)
+      }
+      let token = await module.exports.generateToken(user.id, user.account, user.type, user.username);
+      await module.exports.saveApiToken(
+        'TOKEN_GENERATED',
+        user.id,
+        true,
+        token,
+        req.originalUrl,
+        req.method
+      );
+
       res.status(200).send({
         auth: true,
         token: token
       });
     } catch (err) {
-      res.status(500).send(err);
+      console.error(err);
+      res.status(500).send(err.message);
     }
   },
 
+  async saveApiToken(_type, _id, _status, _token, _url, _method) {
+    try {
+      await apiTokenRepo.create({
+        type: _type,
+        user_id: _id,
+        status: _status,
+        token: _token,
+        url: _url,
+        method: _method
+      });
+    } catch (err) {
+      console.error(err)
+    }
+  },
+
+  //TODO
   async logout(req, res) {
     try {
       // TODO
@@ -170,12 +237,28 @@ module.exports = {
       // await repo.update({
       //   active: false
       // }, id);
+      // await apiTokenRepo.update();
       res.status(200).send({
         auth: false,
         token: null
       });
     } catch (err) {
-      return res.status(500).send(err);
+      console.error(err);
+      return res.status(500).send(err.message);
     }
+  },
+
+  async generateToken(_id, _account, _type, _username) {
+    // create a token
+    return jwt.sign({
+      //payload
+      id: _id,
+      account: _account,
+      role: _type,
+      username: _username
+    }, config.secret, {
+      // algorithm: "ES256",TODO : use some algo with jwt
+      expiresIn: config.TOKEN_EXPIRE_TIME // just playing with it ,expires in 24h
+    });
   }
 }

@@ -34,27 +34,26 @@ module.exports = class User extends SequelizeModel {
             },
             account: {
                 type: Sequelize.STRING,
-                allowNull: false
+                // TODO:For time being,allowNull: false
             },
             type: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            //to check if token is there or not
-            active : {
+            //to check if token is there or not TODO : already done , can be used for profile deletion !
+            active: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
                 defaultValue: true
             },
-            balance : {
+            balance: {
                 type: Sequelize.STRING,
-                allowNull: false,
+                // TODO:For time being,allowNull: false
                 defaultValue: '0'
             },
-            mnemonic : {
+            mnemonic: {
                 type: Sequelize.STRING,
-                allowNull: false,
-                defaultValue: '0'
+                allowNull: false
             }
         });
     }

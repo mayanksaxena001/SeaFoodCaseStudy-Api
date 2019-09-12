@@ -6,5 +6,7 @@ router.use('/', auth.checkToken);
 
 //
 router.post('/key', WalletApi.getPrivateKey);
+
 router.post('/wallet', WalletApi.getWalletDetails);
+
 module.exports = router;

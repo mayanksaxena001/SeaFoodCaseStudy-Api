@@ -2,14 +2,14 @@ var AssetTransferApi = require('../api/AssetTransferApi');
 var auth = require('../controllers/AuthController');
 var express = require('express');
 const router = express.Router();
-router.use('/', auth.checkToken);
+router.use('/', auth.checkToken, auth.isWeb3Connected);
 router.param('id', AssetTransferApi.validation_req);
 
 // router.get('/user/:id', SeaFoodContractApi.get_user);
 // router.post('/user',ContractApi.add_user)
 
 router.get('/accounts', AssetTransferApi.getAccounts);
-router.post('/key', AssetTransferApi.getPrivateKey);
+
 router.post('/asset', AssetTransferApi.createAsset);
 router.put('/asset', AssetTransferApi.editAsset);
 router.get('/asset/:id', AssetTransferApi.getAssetById);

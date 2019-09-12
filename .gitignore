@@ -8,3 +8,6 @@ Beacon-server/.vscode
 
 Beacon-server/node_modules
 
+AngularClient/node_modules
+AngularClient/dist
+
