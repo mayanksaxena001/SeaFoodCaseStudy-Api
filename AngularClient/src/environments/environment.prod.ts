@@ -1,4 +1,4 @@
-const value = 'https://bitcoincash.org.in/api';
+let value = 'http://localhost:8080/api';
 export const environment = {
   production: true,
   blockchainServiceUrl: value + '/auth',

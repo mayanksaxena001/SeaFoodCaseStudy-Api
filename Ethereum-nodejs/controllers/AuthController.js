@@ -34,8 +34,8 @@ module.exports = {
 
   async register(req, res) {
     try {
+      if (!req.body || !req.body.name || !req.body.password || !req.body.username || !req.body.email) throw new Error('Insufficient Info')
       var hashedPassword = bcrypt.hashSync(req.body.password, 8);
-      if (!req.body.name || !req.body.username || !req.body.email) throw new Error('Insufficient Info');
       /**
        * Other variants
        // var _account = web3.utils.soliditySha3(req.body.username);
@@ -46,15 +46,18 @@ module.exports = {
       let _account = await Util.getAddress(_mnemonic, 0, req.body.password);
       let _balance = 0;
       try {
-        if (!_contract.isWeb3Connected()) {
-          throw new Error("Web3 not connected");
+        if (req.body.type != 'user') {
+
+          if (!contractConfig.isWeb3Connected()) {
+            throw new Error("Web3 not connected");
+          }
+          var account = await _contract.createNewAccount(_account, req.body.username, hashedPassword, req.body.type, _mnemonic);
+          if (!account) {
+            _account = account;
+          }
+          balance = await _contract.balanceOf(_account);
+          _balance = _balance.toNumber();
         }
-        account = await _contract.createNewAccount(_account, req.body.username, hashedPassword, req.body.type, _mnemonic);
-        if (account !== 'undefined') {
-          _account = account;
-        }
-        balance = await _contract.balanceOf(_account);
-        _balance = _balance.toNumber();
       } catch (error) {
         console.log(error);
       }

@@ -14,7 +14,7 @@ module.exports = {
                 reqBody.transfer_amount == null) {
                 throw new Error("Insufficient details,Please check the Api ");
             }
-            var details = tokenController.transferTokens(reqBody.from_address, reqBody.to_address, req.transfer_amount);
+            var details = await tokenController.transferTokens(reqBody.from_address, reqBody.to_address, req.transfer_amount);
             return res.status(200).send(details);
         } catch (err) {
             console.error(err);
@@ -24,7 +24,7 @@ module.exports = {
 
     async getTokenDetails(req, res) {
         try {
-            var details = tokenController.getTokenDetails();
+            var details = await tokenController.getTokenDetails();
             return res.status(200).send(details);
         } catch (err) {
             console.error(err);
@@ -34,11 +34,11 @@ module.exports = {
 
     async getBalance(req, res) {
         try {
-            let reqBody = req.body;
-            if (reqBody == null || reqBody._address == null) {
-                throw new Error("Insufficient details,Please check the Api ");
-            }
-            var details = tokenController.balanceOf(reqBody._address);
+            // let reqBody = req.body;
+            // if (reqBody == null || reqBody._address == null) {
+            //     throw new Error("Insufficient details,Please check the Api ");
+            // }
+            var details = await tokenController.balanceOf(req.decoded.account);
             return res.status(200).send(details);
         } catch (err) {
             console.error(err);
@@ -52,7 +52,7 @@ module.exports = {
             if (reqBody == null || reqBody.mint_value == null) {
                 throw new Error("Insufficient details,Please check the Api ");
             }
-            var details = tokenController.mintTokens(reqBody.mint_value);
+            var details = await tokenController.mintTokens(reqBody.mint_value);
             return res.status(200).send(details);
         } catch (err) {
             console.error(err);
@@ -68,7 +68,7 @@ module.exports = {
                 || reqBody.spender_address == null) {
                 throw new Error("Insufficient details,Please check the Api ");
             }
-            var details = tokenController.allowed(reqBody.owner_address,reqBody.spender_address);
+            var details = await tokenController.allowed(reqBody.owner_address,reqBody.spender_address);
             return res.status(200).send(details);
         } catch (err) {
             console.error(err);

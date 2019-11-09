@@ -1,14 +1,15 @@
 {
   "contractName": "Enums",
   "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820f8e5f494b454598f72a39c0e0f03e27ac19b8b70b7e31e98925d0e098461f9460029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820f8e5f494b454598f72a39c0e0f03e27ac19b8b70b7e31e98925d0e098461f9460029",
+  "metadata": "{\"compiler\":{\"version\":\"0.4.26+commit.4563c3fc\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Mayank Saxena\",\"methods\":{},\"title\":\"Enums\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/zeus/Desktop/home/Ethereum/truffle/contracts/Enums.sol\":\"Enums\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/zeus/Desktop/home/Ethereum/truffle/contracts/Enums.sol\":{\"keccak256\":\"0x2ad5e077cfa9085a543376d70d772dbfcb0ccb04ff1eff9947f4d588ff53c1b8\",\"urls\":[\"bzzr://55a2ba9bf87a19be23aa23e49e82e3626aa20db93f2730594553e7686ab4f14d\"]}},\"version\":1}",
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820bc1cb5f8348670147deefa33707610e400cb1cedc0796dfce9b30a71adc99b650029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fd00a165627a7a72305820bc1cb5f8348670147deefa33707610e400cb1cedc0796dfce9b30a71adc99b650029",
   "sourceMap": "170:3971:3:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
   "deployedSourceMap": "170:3971:3:-;;;;;;;;",
   "source": "pragma solidity ^0.4.24;\n\n\n/**\n * @title Enums\n * @author Mayank Saxena\n * @dev Library for managing addresses assigned to a Role.\n * See RBAC.sol for example usage.\n */\nlibrary Enums {\n\n    //enums\n    enum Status {\n        //for sensors\n        DEAD ,\n        ALIVE ,\n        AVAILABLE ,\n        TO_BE_ADDED ,\n        ON_THE_WAY ,\n        PICKED_UP, \n        DELIVERED ,\n        //for transaction\n        IN_PROGRESS ,\n        COMPLETED ,\n        CANCELLED ,\n        PENDING ,\n        SUCCESS \n        // can be added later\n    }\n    \n    enum OwnerType {\n         ADMIN,\n         PRODUCER,\n         CONSUMER,\n         SUPPLIER\n          // can be added later\n    }\n    \n    struct Enum {\n        //enums are converted to uint\n        mapping(uint => string)  enumOwnerType;\n        mapping(uint => string)  enumStatusType;\n    }\n    \n    function addToEnumMapping(Enum storage _enum) internal {\n        _enum.enumStatusType[(uint(Status.AVAILABLE))] = \"AVAILABLE\";\n        _enum.enumStatusType[(uint(Status.ON_THE_WAY))] = \"ON_THE_WAY\";\n        _enum.enumStatusType[(uint(Status.COMPLETED))] = \"COMPLETED\";\n        _enum.enumStatusType[(uint(Status.DELIVERED))] = \"DELIVERED\";\n        _enum.enumStatusType[(uint(Status.PENDING))] = \"PENDING\";\n        _enum.enumStatusType[(uint(Status.SUCCESS))] = \"SUCCESS\";\n        _enum.enumStatusType[(uint(Status.DEAD))] = \"DEAD\";\n        _enum.enumStatusType[(uint(Status.ALIVE))] = \"ALIVE\";\n        _enum.enumStatusType[(uint(Status.TO_BE_ADDED))] = \"TO_BE_ADDED\";\n        _enum.enumStatusType[(uint(Status.IN_PROGRESS))] = \"IN_PROGRESS\";  \n        _enum.enumStatusType[(uint(Status.PICKED_UP))] = \"PICKED_UP\";   \n        _enum.enumStatusType[(uint(Status.CANCELLED))] = \"CANCELLED\";\n    }\n    \n    function createEnumMapping(Enum storage _enum) internal {\n        _enum.enumOwnerType[(uint(OwnerType.ADMIN))] = \"ADMIN\";\n        _enum.enumOwnerType[(uint(OwnerType.PRODUCER))] = \"PRODUCER\";\n        _enum.enumOwnerType[(uint(OwnerType.CONSUMER))] = \"CONSUMER\";\n        _enum.enumOwnerType[(uint(OwnerType.SUPPLIER))] = \"SUPPLIER\";\n    }\n    \n    function getStringStatusType(Enum storage _enum,uint _type) view internal returns(string) {\n            return _enum.enumStatusType[(_type)];\n    }\n   \n    function getStringOwnerType(Enum storage _enum,uint _type) view internal returns(string) {\n          return _enum.enumOwnerType[(_type)];\n    }\n\n    function getPendingStatus() internal pure returns(uint) {\n        return uint(Status.PENDING);\n    }\n\n    function getAliveStatus() internal pure returns(uint) {\n        return uint(Status.ALIVE);\n    }\n\n    function getAvailableStatus() internal pure returns(uint) {\n        return uint(Status.AVAILABLE);\n    }\n\n    function getDeadStatus()  internal pure returns(uint) {\n        return uint(Status.DEAD);\n    }\n\n    function getToBeAddedStatus() internal pure returns(uint) {\n        return uint(Status.TO_BE_ADDED);\n    }\n\n    function getOnTheWayStatus() internal pure returns(uint) {\n        return uint(Status.ON_THE_WAY);\n    }\n\n    function getPickedupStatus() internal pure returns(uint) {\n        return uint(Status.PICKED_UP);\n    }\n\n    function getDeliveredStatus() internal pure returns(uint) {\n        return uint(Status.DELIVERED);\n    }\n\n    function getInProgressStatus() internal pure returns(uint) {\n        return uint(Status.IN_PROGRESS);\n    }\n\n    function getCompletedStatus() internal pure returns(uint) {\n        return uint(Status.COMPLETED);\n    }\n\n    function getCancelledStatus() internal pure returns(uint) {\n        return uint(Status.CANCELLED);\n    }\n\n    function getSuccessStatus() internal pure returns(uint) {\n        return uint(Status.SUCCESS);\n    }\n\n    function getAdminOwnerType() internal pure returns(uint) {\n        return uint(OwnerType.ADMIN);\n    }\n\n    function getConsumerOwnerType() internal pure returns(uint) {\n        return uint(OwnerType.CONSUMER);\n    }\n\n    function getSupplierOwnerType() internal pure returns(uint) {\n        return uint(OwnerType.SUPPLIER);\n    }\n\n    function getProducerOwnerType() internal pure returns(uint) {\n        return uint(OwnerType.PRODUCER);\n    }\n \n}\n\n\n",
-  "sourcePath": "/home/synerzip/Desktop/Ethereum/truffle/contracts/Enums.sol",
+  "sourcePath": "/home/zeus/Desktop/home/Ethereum/truffle/contracts/Enums.sol",
   "ast": {
-    "absolutePath": "/home/synerzip/Desktop/Ethereum/truffle/contracts/Enums.sol",
+    "absolutePath": "/home/zeus/Desktop/home/Ethereum/truffle/contracts/Enums.sol",
     "exportedSymbols": {
       "Enums": [
         1941
@@ -5584,7 +5585,7 @@
     "src": "0:4144:3"
   },
   "legacyAST": {
-    "absolutePath": "/home/synerzip/Desktop/Ethereum/truffle/contracts/Enums.sol",
+    "absolutePath": "/home/zeus/Desktop/home/Ethereum/truffle/contracts/Enums.sol",
     "exportedSymbols": {
       "Enums": [
         1941
@@ -11161,9 +11162,17 @@
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+    "version": "0.4.26+commit.4563c3fc.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-11-13T12:28:24.873Z"
+  "schemaVersion": "3.0.15",
+  "updatedAt": "2019-09-12T13:48:08.172Z",
+  "devdoc": {
+    "author": "Mayank Saxena",
+    "methods": {},
+    "title": "Enums"
+  },
+  "userdoc": {
+    "methods": {}
+  }
 }

@@ -390,6 +390,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dashboardService.getSensors().subscribe(
       (data) => {
         this.waiting = false;
+        console.log(data);
 
         if (data && data.length > 0) {
           this.noSensorData = false;

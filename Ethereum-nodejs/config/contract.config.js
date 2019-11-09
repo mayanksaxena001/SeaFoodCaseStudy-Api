@@ -1,14 +1,18 @@
 var Web3 = require('web3');
+var AssetTransfer_ContractJSON = require('../bin/truffle/latest/contracts/AssetTransfer.json');
+// import {Debug} from 'web3-eth-debug';
+// var API_KEY = I72EM35CDD1YYHBHNA5RGIT2C7J1FMRKGT ;
 if (typeof web3 !== 'undefined') {
   var _web3 = new Web3(web3.currentProvider)
 } else {
-  var _web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:8503'))
+  var _web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8501'))
 }
+// const debug = new Debug(web3.givenProvider || 'ws://localhost:8501', null, options);
 const Wallet = require('ethereumjs-wallet');
 // Transaction id should be replaced in the file to connect ot the backend
 const CONTRACT_ADDRESS = {
-  AssetTransferContract: '0xEab0F72d1eaE0541C84CF087E40cF3A604A80B77',
-  TelemetryCoreContract: '0xC167fF0512F6071325b36A150A9Cce259F761A0a',
+  AssetTransferContract: '0x696bdc4ECE0630536df4052Ccf8B45c2a1C2eACA',
+  TelemetryCoreContract: '0x009a2C00591187BB14bB5a620D8D5900C3f009E3',
   SeaFoodContract: '0xe0069998731086939970f57a6a9558864b605042',
   StateContract: '0xc01af623758f56a50d6a879e7a65d24ffe1aa913',
   StandardToken: '0x435eb45ac9e60980d6069c275397b8f7b3af2d18'
@@ -16,7 +20,10 @@ const CONTRACT_ADDRESS = {
 // _web3.eth.isListening()
 //    .then(() => console.log('is connected'))
 //    .catch(e => console.log('Wow. Something went wrong'));
-
+var AssetTransfer_Contract ;
+if(_web3.isConnected()){
+  AssetTransfer_Contract = _web3.eth.contract(AssetTransfer_ContractJSON); 
+}
 const NETWORK_ID = '*';
 module.exports = {
   _web3,
@@ -28,5 +35,8 @@ module.exports = {
   },
   isWeb3Connected() {
     return _web3.isConnected();
+  },
+  getAssetTransferContractInstance(){
+    return AssetTransfer_Contract?AssetTransfer_Contract:null;
   }
 };

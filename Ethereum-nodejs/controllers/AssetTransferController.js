@@ -14,6 +14,7 @@ class AssetTransferController {
     constructor() {
         try {
             if (contractConfig.isWeb3Connected()) {
+                // var assetTransferContract = contractConfig.getAssetTransferContractInstance()
                 this._web3 = contractConfig._web3;
                 this.AssetTransferContract = AssetTransferContract;
                 this.init();
@@ -32,7 +33,7 @@ class AssetTransferController {
     async init() {
         this.AssetTransferContract.setProvider(this._web3.currentProvider);
         this.AssetTransferContract.setNetwork(contractConfig.NETWORK_ID);
-        this._instance = await this.AssetTransferContract.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
+        this. _instance = await this.AssetTransferContract.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
         this._accounts = await this._web3.eth.accounts;
         // this._web3.eth.defaultAccount = this._accounts[0];
         this._gas = {
@@ -125,7 +126,6 @@ class AssetTransferController {
             return await this.insertUser(address, _username, _type);
         } catch (err) {
             throw new Error(err);
-            createNewAccount
         };
     }
 

@@ -24,6 +24,7 @@ class TokenController {
   async init() {
     this.StandardToken.setProvider(this._web3.currentProvider);
     this.StandardToken.setNetwork(contractConfig.NETWORK_ID);
+    this._accounts = await this._web3.eth.accounts;
     this._instance = await this.StandardToken.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
     // this._web3.eth.defaultAccount = this._accounts[0];
     this._gas = {

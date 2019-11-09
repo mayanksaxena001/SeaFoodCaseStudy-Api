@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
         if (data && data.token) {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('loginPassword', this.loginCredentials.password);
-          this.router.navigate(['/trade']);
+          this.router.navigate(['/dashboard']);
         } else {
           swal('Error!', 'Authentication failed', 'error');
 

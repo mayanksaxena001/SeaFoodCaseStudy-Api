@@ -108,8 +108,10 @@ class TelemetryCoreController {
         sensor.status = _sensor[4];
         sensor.createdAt = Util.formatDate(_sensor[5]);
         sensor.updatedAt = Util.formatDate(_sensor[6]);
-        var user = await assetTransferContract.getUserByAddress(_sensor[2]);
-        sensor.supplierName = user[0];
+        try{
+            var user = await assetTransferContract.getUserByAddress(_sensor[2]);
+            sensor.supplierName = user[0];
+        }catch(err){console.log(err)}
         return sensor;
     }
 

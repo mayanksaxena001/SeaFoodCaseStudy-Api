@@ -8,7 +8,7 @@
         <!-- <small>get it</small> -->
       </a>
     </div>
-    <!-- <div class="profile" *ngIf='navBarVisible'>
+     <div class="profile" *ngIf='navBarVisible'>
       <div (click)='showProfileDetails()'>
         <label class="adminlabel float-right">
           <span class="username">
@@ -98,7 +98,7 @@
       <span class="logout" (click)="logout()">
         <img height="30px" width="30px" src="assets/SVGs/logout_png.png">
       </span>
-    </div> -->
+    </div> 
   </div>
 </nav>
 
@@ -179,7 +179,7 @@
               <div class="col-sm-12">
                 <select [(ngModel)]="userAddress" name="type" placeholder='Select a user' required>
                   <option value="undefined" disabled selected>Select a user</option>
-                  <option *ngFor="let user of userAddresses" [ngValue]="user.account">{{user.fullName}}</option>
+                  <option *ngFor="let user of userAddresses" [ngValue]="user.account">{{user.name}}</option>
                 </select>
               </div>
             </div>

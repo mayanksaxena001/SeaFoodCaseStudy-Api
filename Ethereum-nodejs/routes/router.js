@@ -1,13 +1,16 @@
 var AssetContractApi = require('./assetContract.router');
+var EtherScanApi = require('./etherscan.router');
 var AuthApi = require('./auth.router');
-// var Api = require('./contract.router');
-var Sensor = require('./sensor.router');
-var Wallet = require('./wallet.router');
+var TokenApi = require('./token.router');
+var SensorApi = require('./sensor.router');
+var WalletApi = require('./wallet.router');
 var express = require('express');
 const router = express.Router();
 module.exports = (app) => {
-    app.use('/api/auth', Auth);
-    app.use('/api/contract', AssetContract);
-    app.use('/api/sensor', Sensor);
-    app.use('/api/wallet/', Wallet);
+    app.use('/api/auth', AuthApi);
+    app.use('/api/contract', AssetContractApi);
+    app.use('/api/sensor', SensorApi);
+    app.use('/api/wallet/', WalletApi);
+    app.use('/api/etherscan/', EtherScanApi);
+    app.use('/api/token/', TokenApi);
 }
