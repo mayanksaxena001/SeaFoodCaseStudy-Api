@@ -1,7 +1,7 @@
 var contract = require('truffle-contract');
-var contractConfig = require('../config/contract.config');
+var contractConfig = require('../config/contract.config').default;
 
-var artifacts = require('../bin/truffle/latest/contracts/TelemetryCore.json');
+var artifacts = require('../build/contracts/TelemetryCore.json');
 var TelemetryCoreContract = contract(artifacts);
 var Util = require('./Util');
 
@@ -33,10 +33,11 @@ class TelemetryCoreController {
         this._instance = await this.TelemetryCoreContract.at(contractConfig.CONTRACT_ADDRESS.TelemetryCoreContract);
         this._accounts = await this._web3.eth.accounts;
         // this._web3.eth.defaultAccount = this._accounts[0];
-        this._gas = {
-            from: this._accounts[0],
-            gas: contractConfig.getGasLimit() //9000000000000
-        }
+        // this._gas = {
+        //     from: this._accounts[0],
+        //     gas: contractConfig.getGasLimit() //9000000000000
+        // }
+        this.setGas(this._accounts[0]);
         this._logSensorAddedEvent = await this._instance.LogSensorAddedEvent();
         this._logSensorTelemetryEvent = await this._instance.LogSensorTelemetryEvent();
         this._logSensorUpdateEvent = await this._instance.LogSensorUpdateEvent();
@@ -45,9 +46,9 @@ class TelemetryCoreController {
         this.toConsole("LogSensorTelemetryEvent", this._logSensorTelemetryEvent);
         this.toConsole("LogSensorUpdateEvent", this._logSensorUpdateEvent);
 
-        this.watch(this._logSensorAddedEvent);
-        this.watch(this._logSensorTelemetryEvent);
-        this.watch(this._logSensorUpdateEvent);
+        // this.watch(this._logSensorAddedEvent);
+        // this.watch(this._logSensorTelemetryEvent);
+        // this.watch(this._logSensorUpdateEvent);
 
     }
 
@@ -74,7 +75,15 @@ class TelemetryCoreController {
     toConsole(param, msg) {
         console.log(param + " : ", msg);
     }
-
+     setGas(account) {
+        if (!account) {
+            throw new Error('Account doesnot exist');
+        }
+        this._gas = {
+            from: account,
+            gas: contractConfig.getGasLimit() //9000000000000
+        }
+    }
     async addSensor(_address, _name, _username) {
         if (!_address || !_name || !_username) {
             throw new Error("missing details");

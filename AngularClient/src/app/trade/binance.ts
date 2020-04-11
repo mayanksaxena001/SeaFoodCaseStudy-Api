@@ -22,3 +22,5 @@ interface MyTrade {
     client_order_id: String;
     symbol: String;
 }
+
+export { MyTrade, AccountBalance, BinanceCred }

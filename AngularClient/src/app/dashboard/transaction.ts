@@ -31,3 +31,5 @@ interface Account {
     fullName: string;
     account: string;
 }
+
+export { Account, TransferTokenModal, UpdateTransactionModal, Transaction }

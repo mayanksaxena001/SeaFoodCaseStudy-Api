@@ -1,4 +1,4 @@
-interface WalletModal {
+export interface WalletModal {
     address:string,
     privateKey:string,
     publicKey :string,

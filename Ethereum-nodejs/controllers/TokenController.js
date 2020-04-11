@@ -1,7 +1,6 @@
 var contract = require('truffle-contract');
-var contractConfig = require('../config/contract.config');
-
-var artifacts = require('../bin/truffle/latest/contracts/AssetTransfer.json');
+var contractConfig = require('../config/contract.config').default;
+var artifacts = require('../build/contracts/AssetTransfer.json');
 var StandardToken = contract(artifacts);
 var Wallet = contractConfig.Wallet;
 
@@ -27,8 +26,19 @@ class TokenController {
     this._accounts = await this._web3.eth.accounts;
     this._instance = await this.StandardToken.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
     // this._web3.eth.defaultAccount = this._accounts[0];
+    // this._gas = {
+    //   from: this._accounts[0],
+    //   gas: contractConfig.getGasLimit() //9000000000000
+    // }
+    this.setGas(this._accounts[0]);
+  }
+
+  setGas(account) {
+    if (!account || account === undefined) {
+      throw new Error('Account doesnot exist');
+    }
     this._gas = {
-      from: this._accounts[0],
+      from: account,
       gas: contractConfig.getGasLimit() //9000000000000
     }
   }

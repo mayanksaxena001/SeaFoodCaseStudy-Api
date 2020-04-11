@@ -1,8 +1,9 @@
-#container {
+.container {
   display: flex;
-  background-color: #fff !important;
-  align-self: center;
+  /* background-color: #fff !important; */
+  /* align-self: center; */
   height: 100%;
   width: 100%;
-  
+  justify-content: center;
+  background-color:#040d14;
 }

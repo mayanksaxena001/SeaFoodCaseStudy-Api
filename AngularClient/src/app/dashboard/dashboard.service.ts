@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { Entity, Supplier } from './entity';
+import { Transaction, TransferTokenModal } from './transaction';
+import { Transact } from './transact';
+import { Telemetry, Sensor } from './sensor';
 
 @Injectable({
     providedIn: 'root'
@@ -27,148 +31,100 @@ export class DashboardService {
 
     //Asset Transfer Contract API
     addEntity(data): Observable<Entity> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.post<Entity>('asset', data);
+        return this.http.post<Entity>('contract/asset', data);
     }
 
     getUserEntities(): Observable<Entity[]> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<Entity[]>('assets');
+        return this.http.get<Entity[]>('contract/assets');
     }
 
     updateEntity(data): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.put<any>('asset', data);
+        return this.http.put<any>('contract/asset', data);
     }
 
-    getEntityById(id): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<any>('asset/' + id);
+    getEntityById(id: String): Observable<any> {
+        return this.http.get<any>('contract/asset/' + id);
     }
 
     getTrasferableAssets() {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<Entity[]>('assets/transfer');
+        return this.http.get<Entity[]>('contract/assets/transfer');
     }
 
     requestTokens(amount): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.post<any>('token/request', { value: amount });
+        return this.http.post<any>('contract/token/request', { value: amount });
     }
 
     transferTokens(transferModal: TransferTokenModal): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.post<any>('token/transfer', transferModal);
+        return this.http.post<any>('contract/token/transfer', transferModal);
     }
 
     getAccounts() {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<Account[]>('accounts');
+        return this.http.get<Account[]>('contract/accounts');
     }
 
     getPrivateKey(_password) {
-        localStorage.setItem('isWalletUrl', JSON.stringify(true));
-
-        return this.http.post<any>('key',{password:_password});
+        return this.http.post<any>('wallet/key', { password: _password });
     }
 
-    getWalletDetails(_mnemonic,_path,_password) {
-        localStorage.setItem('isWalletUrl', JSON.stringify(true));
-
-        return this.http.post<any>('details',{mnemonic:_mnemonic,path:_path,password:_password});
+    getWalletDetails(_mnemonic, _path, _password) {
+        return this.http.post<any>('wallet/details', { mnemonic: _mnemonic, path: _path, password: _password });
     }
 
     getTransactions() {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<Transaction[]>('transactions');
+        return this.http.get<Transaction[]>('contract/transactions');
     }
 
     transactEntity(transact: Transact): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.post<any>('asset/transfer', transact);
+        return this.http.post<any>('contract/asset/transfer', transact);
     }
 
-    getTransactionById(id): Observable<Transaction> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<Transaction>('transaction/' + id);
+    getTransactionById(id: String): Observable<Transaction> {
+        return this.http.get<Transaction>('contract/transaction/' + id);
     }
 
     getSuppliers() {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.get<Supplier[]>('suppliers');
+        return this.http.get<Supplier[]>('contract/suppliers');
     }
-
+    //TODO : Update data type
     updateTransactionSensorId(data): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.put<any>('transaction/accept', data);
+        return this.http.put<any>('contract/transaction/accept', data);
     }
 
     updateTransactionPickUp(data): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.put<any>('transaction/picked', data);
+        return this.http.put<any>('contract/transaction/picked', data);
     }
 
     updateTransactionCompleted(data): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.put<any>('transaction/complete', data);
+        return this.http.put<any>('contract/transaction/complete', data);
     }
 
     cancelTransaction(data): Observable<any> {
-        localStorage.setItem('isContractUrl', JSON.stringify(true));
-
-        return this.http.put<any>('transaction/cancel', data);
+        return this.http.put<any>('contract/transaction/cancel', data);
     }
 
     //Telemetry Contract API
     getSensors(): Observable<Sensor[]> {
-        localStorage.setItem('isSensorUrl', JSON.stringify(true));
-
-        return this.http.get<Sensor[]>('');
+        return this.http.get<Sensor[]>('sensor');
     }
 
-    getSensorById(id): Observable<Sensor> {
-        localStorage.setItem('isSensorUrl', JSON.stringify(true));
-
-        return this.http.get<Sensor>('' + id);
+    getSensorById(id: String): Observable<Sensor> {
+        return this.http.get<Sensor>('sensor/' + id);
     }
 
     addSensor(data): Observable<Sensor> {
-        localStorage.setItem('isSensorUrl', JSON.stringify(true));
-
-        return this.http.post<Sensor>('', data);
+        return this.http.post<Sensor>('sensor', data);
     }
 
-    getTelemetryById(id): Observable<Telemetry> {
-        localStorage.setItem('isSensorUrl', JSON.stringify(true));
-
-        return this.http.get<Telemetry>('telemetry/' + id);
+    getTelemetryById(id: String): Observable<Telemetry> {
+        return this.http.get<Telemetry>('sensor/telemetry/' + id);
     }
 
-    getSensorTelemetries(id): Observable<Telemetry[]> {
-        localStorage.setItem('isSensorUrl', JSON.stringify(true));
-
-        return this.http.get<Telemetry[]>('telemetries/' + id);
+    getSensorTelemetries(id: String): Observable<Telemetry[]> {
+        return this.http.get<Telemetry[]>('sensor/telemetries/' + id);
     }
 
-    getTransactionTelemetries(id): Observable<Telemetry[]> {
-        localStorage.setItem('isSensorUrl', JSON.stringify(true));
-
-        return this.http.get<Telemetry[]>('transaction/telemetries/' + id);
+    getTransactionTelemetries(id: String): Observable<Telemetry[]> {
+        return this.http.get<Telemetry[]>('sensor/transaction/telemetries/' + id);
     }
 
 }

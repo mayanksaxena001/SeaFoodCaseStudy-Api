@@ -1,7 +1,6 @@
 'use strict';
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
-var config = require('../config/config');
 var UserRepository = require('../mysql/db/user.repository');
 var ApiTokenRepository = require('../mysql/db/apitoken.repository');
 const repo = new UserRepository();
@@ -12,8 +11,7 @@ var {
   assetTransferContract
 } = require('./AssetTransferController');
 var _contract = assetTransferContract;
-var web3 = require('web3');
-var contractConfig = require('../config/contract.config');
+var contractConfig = require('../config/contract.config').default;
 
 module.exports = {
 
@@ -51,11 +49,8 @@ module.exports = {
           if (!contractConfig.isWeb3Connected()) {
             throw new Error("Web3 not connected");
           }
-          var account = await _contract.createNewAccount(_account, req.body.username, hashedPassword, req.body.type, _mnemonic);
-          if (!account) {
-            _account = account;
-          }
-          balance = await _contract.balanceOf(_account);
+          await _contract.createNewAccount(_account, req.body.username, hashedPassword, req.body.type);
+          _balance = await _contract.balanceOf(_account);
           _balance = _balance.toNumber();
         }
       } catch (error) {
@@ -83,8 +78,9 @@ module.exports = {
         req.method
       );
       res.status(200).send({
-        auth: true,
-        token: token
+        'auth': true,
+        'x-access-token': token,
+        'token': token
       });
       // console.log(res);
 
@@ -141,7 +137,7 @@ module.exports = {
       var jwtVerifyAsync = Promise.promisify(jwt.verify, {
         context: jwt
       })
-      var decoded = await jwtVerifyAsync(token, config.secret);
+      var decoded = await jwtVerifyAsync(token, process.env.SECRET);
       if (decoded) {
         var user = await repo.getById(decoded.id);
         if (!user) throw new Error("User is not registered or might not be active");
@@ -184,16 +180,18 @@ module.exports = {
       if (!user) return res.status(404).send('User Not Found');;
       var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
       if (!passwordIsValid) return res.status(401).send({
-        auth: false,
-        token: null
+        'auth': false,
+        'x-access-token': null
       });
       try {
-
-        var _balance = await _contract.balanceOf(user.account);
-        await repo.update({
-          active: true,
-          balance: _balance.toNumber()
-        }, user.id);
+        if (contractConfig.isWeb3Connected()) {
+          var _balance = await _contract.balanceOf(user.account);
+          //TODO : do not update balance while login
+          await repo.update({
+            active: true,
+            balance: _balance.toNumber()
+          }, user.id);
+        }
       } catch (err) {
         console.error(err)
       }
@@ -208,8 +206,9 @@ module.exports = {
       );
 
       res.status(200).send({
-        auth: true,
-        token: token
+        'auth': true,
+        'x-access-token': token,
+        'token': token
       });
     } catch (err) {
       console.error(err);
@@ -242,8 +241,8 @@ module.exports = {
       // }, id);
       // await apiTokenRepo.update();
       res.status(200).send({
-        auth: false,
-        token: null
+        'auth': false,
+        'x-access-token': null
       });
     } catch (err) {
       console.error(err);
@@ -259,9 +258,9 @@ module.exports = {
       account: _account,
       role: _type,
       username: _username
-    }, config.secret, {
+    }, process.env.SECRET, {
       // algorithm: "ES256",TODO : use some algo with jwt
-      expiresIn: config.TOKEN_EXPIRE_TIME // just playing with it ,expires in 24h
+      expiresIn: process.env.TOKEN_EXPIRE_TIME // just playing with it ,expires in 24h
     });
   }
 }

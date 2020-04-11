@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoginService } from '../login.service';
 
 import swal from 'sweetalert2';
+import { Signup } from '../login';
 
 @Component({
   selector: 'app-sign-up',
@@ -19,7 +20,9 @@ export class SignUpComponent implements OnInit {
   signup: Signup;
   waiting = false;
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(private router: Router, private loginService: LoginService) {
+    console.log('Inside Signup component constructor');  
+   }
 
   ngOnInit() {
 

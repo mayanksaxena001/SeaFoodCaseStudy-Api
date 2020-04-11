@@ -13,6 +13,10 @@ module.exports = {
         req.id = id;
         callback();
     },
+     setGas(req, res, callback) {
+        _contract.setGas(req.decoded.account);
+        callback();
+    },
     //should be included in telemetry core
     async addSensor(req, res) {
         try {

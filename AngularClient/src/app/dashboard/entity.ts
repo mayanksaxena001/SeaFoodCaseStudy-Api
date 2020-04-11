@@ -7,8 +7,8 @@ interface Entity {
     trackId: string;
     value: number;
     type: string;
-    createdAt:string;
-    updatedAt:string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface EntityModal {
@@ -22,3 +22,5 @@ interface Supplier {
     name: string;
     type: string;
 }
+
+export { Entity, EntityModal, Supplier }

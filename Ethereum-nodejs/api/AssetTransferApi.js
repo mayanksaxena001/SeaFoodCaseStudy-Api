@@ -18,6 +18,10 @@ module.exports = {
         req.id = id;
         callback();
     },
+    setGas(req, res, callback) {
+        _contract.setGas(req.decoded.account);
+        callback();
+    },
 
     async createAsset(req, res) {
         try {
@@ -112,7 +116,6 @@ module.exports = {
         } catch (err) {
             return res.status(500).send(err);
         }
-        req.decoded.role
     },
 
     async requestTokens(req, res) {

@@ -1,14 +1,12 @@
 <div class="preloader" [hidden]="!waiting"></div>
-
-<nav class="navbar navbar-default headerbar">
-  <div class="container">
-    <div class="navbar-header">
-      <a class="navbar-brand headertext">
-        <b>XFT Tokens for sale! </b>
-        <!-- <small>get it</small> -->
-      </a>
+  <div class="headerbar">
+    <div class="headertext">
+      <span>
+        <b>SEA FOOD </b>
+        <small class="small-text">CASE STUDY</small>
+      </span>
     </div>
-     <div class="profile" *ngIf='navBarVisible'>
+    <div class="profile" >
       <div (click)='showProfileDetails()'>
         <label class="adminlabel float-right">
           <span class="username">
@@ -17,7 +15,6 @@
               {{user?.username}}
             </span>
           </span>
-
           <span disabled="disabled" class="useraddress">
             {{user?.account}}
           </span>
@@ -43,9 +40,9 @@
               <b> {{user?.username}}</b>
             </span>
           </div>
-
+          
           <br>
-
+          
           <div class="row">
             <div class="col-md-4 profile-details-span">Address:</div>
             <span>
@@ -95,15 +92,14 @@
           </div>
         </div>
       </div>
-      <span class="logout" (click)="logout()">
+      <div class="logout" (click)="logout()">
         <img height="30px" width="30px" src="assets/SVGs/logout_png.png">
-      </span>
+      </div>
     </div> 
   </div>
-</nav>
-
-<!--Request Token Modal -->
-<div class="modal fade" id="requestToken" role="dialog" aria-labelledby="TokenModalLabel" data-backdrop="static" data-keyboard="false"
+  
+  <!--Request Token Modal -->
+  <div class="modal fade" id="requestToken" role="dialog" aria-labelledby="TokenModalLabel" data-backdrop="static" data-keyboard="false"
   aria-hidden="true">
   <div class="modal-dialog request-token-dialog">
     <!-- Modal content-->

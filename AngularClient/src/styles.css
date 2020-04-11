@@ -13,7 +13,7 @@ body {
 }
 
 .maincontainer {
-  /* background-color: #1a1a1a */
+  background-color: #1a1a1a
 }
 
 .padding10 {
@@ -75,10 +75,6 @@ body {
 /**************************************/
 
 /************* for inputs (label, textbox, select) ***************/
-
-.headertext {
-  color: #ffffff !important
-}
 
 .black_color {
   color: #000000
@@ -337,7 +333,7 @@ hr {
 
 .preloader {
   background-color: #ffffff;
-  background-image: url(https://s3-ap-southeast-1.amazonaws.com/ck-img/preloader.GIF);
+  background-image: url(./assets/SVGs/ethereum.gif);
   background-position: center center;
   background-repeat: no-repeat;
   left: 0px;

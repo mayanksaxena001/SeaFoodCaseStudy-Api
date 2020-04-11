@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,9 @@ import { LoginService } from '../login/login.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 
 import swal from 'sweetalert2';
+import { WalletModal } from './wallet';
+import { TransferTokenModal } from '../dashboard/transaction';
+import { User } from '../login/login';
 
 declare let $: any;
 declare function escape(s: string): string;
@@ -20,52 +23,45 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showGetPrivateKeyForm = true;
   waiting = false;
-  user: User;
+  user: User = undefined;
   profileDetailsVisible = false;
   navBarVisible = false;
   subscription: Subscription;
   tokenValue: number;
 
-  userAddress: string;
+  userAddress: string = undefined;
   userAddresses: Account[];
   amountToTransfer: number;
-  walletPath;
-  walletMnemonic;
-  loginPassword;
-  wallet: WalletModal;
+  walletPath: any;
+  walletMnemonic: any;
+  loginPassword: string;
+  wallet: WalletModal = undefined;
+  
+  @ViewChild('requestTokenForm', { static: true }) requestTokenForm: any;
+  @ViewChild('transferTokenForm', { static: true }) transferTokenForm: any;
+  @ViewChild('getPrivateKeyForm', { static: true }) getPrivateKeyForm: any;
 
-  @ViewChild('requestTokenForm') requestTokenForm: any;
-  @ViewChild('transferTokenForm') transferTokenForm: any;
-  @ViewChild('getPrivateKeyForm') getPrivateKeyForm: any;
-
-  constructor(private loginService: LoginService, private router: Router,
+  constructor(@Inject('BASE_API_URL') private baseUrl: string,private loginService: LoginService, private router: Router,
     private dashboardService: DashboardService) {
-
+    console.log('Inside Header component constructor');  
     this.subscription = this.dashboardService.navBar.subscribe(
       navBar => {
-
         this.navBarVisible = navBar;
-
         if (this.navBarVisible) {
-
-          this.user = JSON.parse(localStorage.getItem('UserDetails'));
-          this.getAllUsers();
-
+          this.user = JSON.parse(localStorage.getItem('currentUser'));
+          // if (this.userAddress != null && this.userAddresses !== undefined && this.userAddresses.length != 0) this.getAllUsers();
         }
       }
     );
   }
 
   ngOnInit() {
-
-    this.profileDetailsVisible = true;
-
+    // this.profileDetailsVisible = false;
     if (this.navBarVisible) {
-      this.user = JSON.parse(localStorage.getItem('UserDetails'));
+      this.user = JSON.parse(localStorage.getItem('currentUser'));
       // this.getAllUsers();
     }
-
-    this.initialiseData();
+    // this.initialiseData();
   }
 
   initialiseData() {
@@ -81,7 +77,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getAllUsers() {
     this.waiting = true;
-
     this.dashboardService.getAccounts().subscribe(
       (data) => {
         this.waiting = false;
@@ -91,13 +86,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
-
         if (err.error instanceof Error) {
           console.log('An error occurred: ', err.error.message); // client
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
-
         swal('Error!', 'Oops you missed it this time! Try again...!!!', 'error');
       }
     );
@@ -124,60 +117,48 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  //TODO : update url
   openTrade() {
-    window.open("http://localhost:8000/trade", "_blank");
+    window.open(`${this.baseUrl}/trade`, "_blank");
   }
 
   showProfileDetails() {
-
     this.profileDetailsVisible = !this.profileDetailsVisible;
   }
 
   logout() {
-
-    this.profileDetailsVisible = false;
-
     this.waiting = true;
-
+    this.profileDetailsVisible = false;
+    this.dashboardService.showNavbar(false);
+    localStorage.clear();
     this.loginService.logout().subscribe(
       (data) => {
         this.waiting = false;
-
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
-
         if (err.error instanceof Error) {
           console.log('An error occurred: ', err.error.message); // client
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
-
         // swal('Error!', 'Backend Error while logout', 'error');
       }
     );
-    this.dashboardService.showNavbar(false);
-    localStorage.removeItem('authToken');
     this.router.navigateByUrl('/login');
   }
 
   showRequestTokensForm() {
     this.profileDetailsVisible = false;
-
     this.requestTokenForm.reset();
-
     this.getPrivateKeyForm.reset();
-
     this.showGetPrivateKeyForm = true;
-
     this.userAddress = undefined;
     this.amountToTransfer = 0;
   }
 
   requestTokens() {
-
     this.waiting = true;
-
     this.dashboardService.requestTokens(this.tokenValue).subscribe(
       (data) => {
         this.waiting = false;
@@ -191,13 +172,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
-
         if (err.error instanceof Error) {
           console.log('An error occurred: ', err.error.message); // client
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
-
         swal('Error!', 'Oops you missed it this time! Try again...!!!', 'error');
       }
     );
@@ -205,14 +184,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   transferTokens() {
-
     this.waiting = true;
-
     let transferToken: TransferTokenModal = {
       to: this.userAddress,
       value: this.amountToTransfer
     };
-
     this.dashboardService.transferTokens(transferToken).subscribe(
       (data) => {
         this.waiting = false;
@@ -232,17 +208,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
-
         swal('Error!', 'Oops you missed it this time! Try again...!!!', 'error');
       }
     );
   }
 
   getPrivateKey() {
-
     if (this.loginPassword !== localStorage.getItem('loginPassword')) {
       swal('Error!', 'Oops Password does not match with the login password!!!', 'error');
-
     } else {
       this.waiting = true;
       if (this.walletPath && this.walletMnemonic) {
@@ -260,20 +233,16 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
               this.wallet.jsonFileData = JSON.stringify(data);
             } else {
-
               swal('Error!', 'Something went wrong...!!!', 'error');
             }
-
           },
           (err: HttpErrorResponse) => {
             this.waiting = false;
-
             if (err.error instanceof Error) {
               console.log('An error occurred: ', err.error.message); // client
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
             }
-
             swal('Error!', 'Oops you missed it this time! Try again...!!!', 'error');
           }
         );
@@ -284,7 +253,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
             this.waiting = false;
             if (data) {
               this.showGetPrivateKeyForm = false;
-
               this.wallet.privateKey = data.privateKey;
               this.wallet.publicKey = `${data.publicKey}`;
               this.wallet.hdWalletPath = data.hdWalletPath;
@@ -292,20 +260,16 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
               this.wallet.address = data.address;
               this.wallet.jsonFileData = JSON.stringify(data);
             } else {
-
               swal('Error!', 'Something went wrong...!!!', 'error');
             }
-
           },
           (err: HttpErrorResponse) => {
             this.waiting = false;
-
             if (err.error instanceof Error) {
               console.log('An error occurred: ', err.error.message); // client
             } else {
               console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
             }
-
             swal('Error!', 'Oops you missed it this time! Try again...!!!', 'error');
           }
         );
@@ -314,13 +278,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   downloadJSONFile() {
-
     let data = JSON.parse(this.wallet.jsonFileData);
-
     let uri = 'data:text/json;charset=utf-8,' + escape(JSON.stringify(data.fileContents));
     let link = document.createElement("a");
     let fileName = data.fileName + '.json';
-
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveOrOpenBlob(new Blob([(JSON.stringify(data.fileContents))], { type: 'text/json;charset=utf-8' }), fileName);
     } else {
@@ -338,7 +299,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     selBox.style.left = '0';
     selBox.style.top = '0';
     selBox.style.opacity = '0';
-
     if (val === 'private key') {
       selBox.value = this.wallet.privateKey;
     } else if (val === 'public key') {
@@ -350,7 +310,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (val === 'address') {
       selBox.value = this.wallet.address;
     }
-
     document.body.appendChild(selBox);
     selBox.focus();
     selBox.select();

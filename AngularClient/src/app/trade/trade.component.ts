@@ -6,6 +6,7 @@ import swal from 'sweetalert2';
 import { AfterViewInit } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { log } from 'util';
+import { BinanceCred, AccountBalance, MyTrade } from './binance';
 
 @Component({
   selector: 'app-trade',
@@ -14,7 +15,7 @@ import { log } from 'util';
 })
 export class TradeComponent implements OnInit, AfterViewInit {
   constructor(private binanceService: BinanceService) { }
-  @ViewChild('credForm') credForm: any;
+  @ViewChild('credForm', { static: true }) credForm: any;
 
   cred: BinanceCred;
   waiting = false;

@@ -4,9 +4,9 @@ interface Sensor {
     address: string;
     trackId: string;
     status: string;
-    updatedAt:Date;
-    createdAt:Date;
-    supplierName:string;
+    updatedAt: Date;
+    createdAt: Date;
+    supplierName: string;
 }
 
 interface SensorModal {
@@ -23,5 +23,7 @@ interface Telemetry {
     latitude: string;
     longitude: string;
     place: string;
-    updatedAt:string;
+    updatedAt: string;
 }
+
+export { Telemetry, Sensor, SensorModal }

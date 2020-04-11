@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { ApiInterceptor } from './api-interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -24,6 +25,7 @@ import { DashboardService } from './dashboard/dashboard.service';
 import { GameService } from './game/game.service';
 import { BinanceService } from './trade/binance.service';
 import { HomeComponent } from './home/home.component';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthService,
@@ -55,7 +58,8 @@ import { HomeComponent } from './home/home.component';
       provide: HTTP_INTERCEPTORS,
       useClass: ApiInterceptor,
       multi: true
-    }
+    },
+    { provide: "BASE_API_URL", useValue: environment.baseUrl }
   ],
   bootstrap: [AppComponent]
 })

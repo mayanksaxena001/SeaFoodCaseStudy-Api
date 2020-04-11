@@ -1,6 +1,6 @@
 var contract = require('truffle-contract');
-var contractConfig = require('../config/contract.config');
-var artifacts = require('../bin/truffle/latest/contracts/AssetTransfer.json');
+var contractConfig = require('../config/contract.config').default;
+var artifacts = require('../build/contracts/AssetTransfer.json');
 var AssetTransferContract = contract(artifacts);
 var Util = require('./Util');
 
@@ -33,13 +33,14 @@ class AssetTransferController {
     async init() {
         this.AssetTransferContract.setProvider(this._web3.currentProvider);
         this.AssetTransferContract.setNetwork(contractConfig.NETWORK_ID);
-        this. _instance = await this.AssetTransferContract.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
+        this._instance = await this.AssetTransferContract.at(contractConfig.CONTRACT_ADDRESS.AssetTransferContract);
         this._accounts = await this._web3.eth.accounts;
         // this._web3.eth.defaultAccount = this._accounts[0];
-        this._gas = {
-            from: this._accounts[0],
-            gas: contractConfig.getGasLimit() //9000000000000
-        }
+        // this._gas = {
+        //     from: this._accounts[0],
+        //     gas: contractConfig.getGasLimit() //9000000000000
+        // }
+        this.setGas(this._accounts[0]);
         this._logTransferTokenEvent = await this._instance.Transfer();
         this._logApprovalTokenEvent = await this._instance.Approval();
         this._logTransferAssetEvent = await this._instance.LogTransferAssetEvent();
@@ -72,20 +73,29 @@ class AssetTransferController {
         this.toConsole("LogSupplierSensorAlert", this._logSupplierSensorAlert);
         this.toConsole("LogNewAssetEvent", this._logNewAssetEvent);
 
-        this.watch(this._logTransferAssetEvent);
-        this.watch(this._logUpdateAssetEvent);
+        // this.watch(this._logTransferAssetEvent);
+        // this.watch(this._logUpdateAssetEvent);
         // this.watch(this._logDeleteAssetEvent);
-        this.watch(this._logNewUserEvent);
-        this.watch(this._logTransferTokenEvent);
-        this.watch(this._logApprovalTokenEvent);
-        this.watch(this._logMemberAdded);
-        this.watch(this._logMemberRemoved);
-        this.watch(this._logOwnershipTransferred);
-        this.watch(this._logLockedFundsEvent);
-        this.watch(this._logReleasedFundsEvent);
-        this.watch(this._logTransactionUpdateEvent);
-        this.watch(this._logSupplierSensorAlert);
-        this.watch(this._logNewAssetEvent);
+        // this.watch(this._logNewUserEvent);
+        // this.watch(this._logTransferTokenEvent);
+        // this.watch(this._logApprovalTokenEvent);
+        // this.watch(this._logMemberAdded);
+        // this.watch(this._logMemberRemoved);
+        // this.watch(this._logOwnershipTransferred);
+        // this.watch(this._logLockedFundsEvent);
+        // this.watch(this._logReleasedFundsEvent);
+        // this.watch(this._logTransactionUpdateEvent);
+        // this.watch(this._logSupplierSensorAlert);
+        // this.watch(this._logNewAssetEvent);
+    }
+    setGas(account) {
+        if (!account) {
+            throw new Error('Account doesnot exist');
+        }
+        this._gas = {
+            from: account,
+            gas: contractConfig.getGasLimit() //9000000000000
+        }
     }
 
     watch(event) {
@@ -121,9 +131,10 @@ class AssetTransferController {
         console.log(param + " : ", msg);
     }
 
-    async createNewAccount(address, _username, _password, _type, menmonic) {
+    async createNewAccount(address, _username, _password, _type) {
         try {
-            return await this.insertUser(address, _username, _type);
+            await this.insertUser(address, _username, _type);
+            return true;
         } catch (err) {
             throw new Error(err);
         };
@@ -148,21 +159,21 @@ class AssetTransferController {
         if (!_address || !_username) {
             throw new Error("missing details");
         }
-        await this._instance.addProducer(_address, _username, this._gas);
+        return await this._instance.addProducer(_address, _username, this._gas);
     }
 
     async addConsumer(_address, _username) {
         if (!_address || !_username) {
             throw new Error("missing details");
         }
-        await this._instance.addConsumer(_address, _username, this._gas);
+        return await this._instance.addConsumer(_address, _username, this._gas);
     }
 
     async addSupplier(_address, _username) {
         if (!_address || !_username) {
             throw new Error("missing details");
         }
-        await this._instance.addSupplier(_address, _username, this._gas);
+        return await this._instance.addSupplier(_address, _username, this._gas);
     }
 
     async getUserByAddress(_address) {
@@ -304,7 +315,7 @@ class AssetTransferController {
                         }
                         //nothing for now
                     }
-                } catch (err) {}
+                } catch (err) { }
                 // user.balance = _user[2]; //_balance
             }
         } catch (err) {
@@ -385,7 +396,7 @@ class AssetTransferController {
     //     var retryCountLimit = 100;
 
     //     var promise = new Promise((resolve, reject) => {
-    //         var timer = setInterval(function () {
+    //         var timer = setInterval(function () {auth
 
     //             contractConfig._web3.eth.getTransactionReceipt(hash, function(err, rec) {
     //                 if(err) {

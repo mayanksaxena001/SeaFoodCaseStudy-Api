@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Login, Token, Signup, User } from './login';
 
 @Injectable({
     providedIn: 'root'
@@ -9,28 +10,18 @@ export class LoginService {
     constructor(private http: HttpClient) { }
 
     login(loginCredentials: Login) {
-        localStorage.setItem('isAppServiceUrl', JSON.stringify(true));
-
-        return this.http.post<Token>('login', loginCredentials);
+        return this.http.post<Token>('auth/login', loginCredentials);
     }
 
     logout() {
-        localStorage.setItem('isAppServiceUrl', JSON.stringify(true));
-
-        return this.http.put<Token>('logout', {});
-
+        return this.http.put<Token>('auth/logout', {});
     }
 
     signUp(signUpDetails: Signup) {
-        localStorage.setItem('isAppServiceUrl', JSON.stringify(true));
-
-        return this.http.post<Token>('signup', signUpDetails);
-
+        return this.http.post<Token>('auth/signup', signUpDetails);
     }
 
     getUserDetails() {
-        localStorage.setItem('isAppServiceUrl', JSON.stringify(true));
-
-        return this.http.get<User>('user');
+        return this.http.get<User>('auth/user');
     }
 }

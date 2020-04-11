@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoginService } from './login.service';
 
 import swal from 'sweetalert2';
+import { Login } from './login';
 
 @Component({
   selector: 'app-login',
@@ -14,46 +15,41 @@ import swal from 'sweetalert2';
 export class LoginComponent implements OnInit {
 
   waiting = false;
-  loginCredentials: Login;
+  loginCredentials: Login = undefined;
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(private router: Router, private loginService: LoginService) { 
+    console.log('Inside Login component constructor');  
+  }
 
   ngOnInit() {
 
     localStorage.clear();
 
-    this.loginCredentials = {
-      username: '',
-      password: ''
-    }
+    // this.loginCredentials = {
+    //   username: '',
+    //   password: ''
+    // }
   }
 
   login() {
-
     this.waiting = true;
-
     this.loginService.login(this.loginCredentials).subscribe(
       (data) => {
         this.waiting = false;
-
         if (data && data.token) {
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('loginPassword', this.loginCredentials.password);
           this.router.navigate(['/dashboard']);
         } else {
           swal('Error!', 'Authentication failed', 'error');
-
         }
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
-
         if (err.status === 404) {
           swal('Error!', 'User does not exist!', 'error');
-
         } else if (err.status === 401) {
           swal('Error!', 'Your Password is Incorrect.Are you unconscious? ', 'error');
-
         }
         else {
           if (err.error instanceof Error) {
@@ -61,7 +57,6 @@ export class LoginComponent implements OnInit {
           } else {
             console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
           }
-
           swal('Error!', 'Something went wrong. Please try again.', 'error');
         }
 
@@ -71,7 +66,6 @@ export class LoginComponent implements OnInit {
 
   signUp() {
     this.router.navigate(['/signup']);
-
   }
 
 }

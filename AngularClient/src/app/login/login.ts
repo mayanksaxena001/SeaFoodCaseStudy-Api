@@ -26,3 +26,4 @@ interface User {
     balance: number;
     active: boolean;
 }
+export { User, Signup, Token, Login }

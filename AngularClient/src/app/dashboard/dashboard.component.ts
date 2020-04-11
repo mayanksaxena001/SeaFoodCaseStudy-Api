@@ -8,6 +8,11 @@ import { DashboardService } from './dashboard.service';
 import { LoginService } from '../login/login.service';
 
 import swal from 'sweetalert2';
+import { SensorModal, Sensor, Telemetry } from './sensor';
+import { EntityModal, Entity, Supplier } from './entity';
+import { User } from '../login/login';
+import { Transact } from './transact';
+import { Transaction, UpdateTransactionModal } from './transaction';
 declare let $: any;
 
 @Component({
@@ -17,9 +22,9 @@ declare let $: any;
 })
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('editEntityForm') editEntityForm: any;
-  @ViewChild('addEntityForm') addEntityForm: any;
-  @ViewChild('addSensorForm') addSensorForm: any;
+  @ViewChild('editEntityForm', { static: true }) editEntityForm: any;
+  @ViewChild('addEntityForm', { static: true }) addEntityForm: any;
+  @ViewChild('addSensorForm', { static: true }) addSensorForm: any;
   @ViewChild('sensorMap') sensorMapElement: any;
   @ViewChild('transactionMap') transactionMapElement: any;
 
@@ -37,7 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   transact: Transact;
 
   entity: Entity;
-  addEntityModal: EntityModal;
+  addEntityModal: EntityModal | undefined;
   editEntityModal: EntityModal;
 
   subscription: Subscription;
@@ -63,28 +68,37 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   supplier: Supplier;
   suppliers: Supplier[];
-  supplierName;
-  selectedSupplier;
+  supplierName: string;
+  selectedSupplier: any;
 
   constructor(private dashboardService: DashboardService,
     private loginService: LoginService, private router: Router) {
-
+    console.log('Inside Dashboard component constructor');  
     this.subscription = dashboardService.allEntities.subscribe(
       allEntities => {
-
-        this.getUserDetails();
+        if(allEntities){
+          console.log('Updating all entities on dashboard')
+          this.getUserDetails();
+          // this.displayAssets();
+          // this.getTransferableAssets();
+          // this.getTransactions();
+          // this.getSuppliers();
+        }
       }
-    );
+      , (err) => { },
+      () => {
+        //TODO : not getting called,CHeck
+      });
   }
 
   ngOnInit() {
     this.initialiseData();
-
     this.getUserDetails();
-
+    this.dashboardService.showNavbar(true);
+    this.dashboardService.updateAllEntities(true);
   }
   ngAfterViewInit(): void {
-    this.initGoogleMap();
+    // this.initGoogleMap();
   }
   initGoogleMap() {
     if (typeof google != 'undefined') {
@@ -111,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (data) {
           this.user = data;
-          localStorage.setItem('UserDetails', JSON.stringify(this.user));
+          localStorage.setItem('currentUser', JSON.stringify(this.user));
           this.dashboardService.showNavbar(true);
         } else {
           swal('Error!', 'Error fetching user details', 'error');
@@ -127,12 +141,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         swal('Error!', 'Backend Error fetching user details', 'error');
-      },
-      () => {
-        this.displayAssets();//TODO : not getting called,CHeck
-        this.getTransferableAssets();
-        this.getTransactions();
-        this.getSuppliers();
       }
     );
   }
@@ -441,7 +449,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dashboardService.getSensorTelemetries(id).subscribe(
       (data) => {
         this.waiting = false;
-        console.log('Tele ',data);
+        console.log('Tele ', data);
         if (data && data.length > 0) {
           this.noSensorTelemetryData = false;
           this.sensorTelemetries = data;
@@ -569,7 +577,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
   }
-
+  //TODO : update url
   showUserDetails() {
     window.open("http://localhost:8000/#/address/" + this.user.account);
 

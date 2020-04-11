@@ -5,6 +5,10 @@ var Util = require('../controllers/Util');
 var bcrypt = require('bcryptjs');
 
 module.exports = {
+    setGas(req, res, callback) {
+        tokenController.setGas(req.decoded.account);
+        callback();
+    },
     //TODO seggregate details
     async transfer(req, res) {
         try {

@@ -1,4 +1,6 @@
-interface Transact {
+import { Supplier } from './entity';
+
+export interface Transact {
     from: string;
     name: string;
     id: string;
