@@ -15,7 +15,7 @@ import { BinanceCred, AccountBalance, MyTrade } from './binance';
 })
 export class TradeComponent implements OnInit, AfterViewInit {
   constructor(private binanceService: BinanceService) { }
-  @ViewChild('credForm', { static: true }) credForm: any;
+  @ViewChild('credForm') credForm: any;
 
   cred: BinanceCred;
   waiting = false;

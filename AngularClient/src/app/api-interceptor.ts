@@ -15,7 +15,7 @@ export class ApiInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const apiReq = req.clone({
-            headers: req.headers.set('x-access-token', `${this.auth.getToken()}`),
+            setHeaders: { 'x-access-token': `${this.auth.getToken()}` },
             url: `${this.baseUrl}/${req.url}`,
         });
         return next.handle(apiReq);

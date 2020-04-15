@@ -9,14 +9,13 @@ import { DashboardService } from './dashboard/dashboard.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'XFT Token for sale';
 
   constructor(private router: Router, private dashboardService: DashboardService) {
-    router.events.subscribe((val) => {
-      if (val['url'] === '/dashboard') {
-        this.dashboardService.showNavbar(true);
-
-      }
-    });
+    // router.events.subscribe((val) => {
+    //   if (val['url'] === '/dashboard') {
+    //     console.log('AppComponent router event subscription..');
+    //     this.dashboardService.showNavbar(true);
+    //   }
+    // });
   }
 }

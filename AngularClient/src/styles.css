@@ -2,9 +2,9 @@
 
 html,
 body {
-  position: relative;
   height: 100%;
   width: 100%;
+  color: #9F9F9F;
 }
 
 .jumbotron {
@@ -12,9 +12,6 @@ body {
   background-color: #fff !important;
 }
 
-.maincontainer {
-  background-color: #1a1a1a
-}
 
 .padding10 {
   padding: 10px;
@@ -45,7 +42,7 @@ body {
 .popupcontainer {
   margin-left: auto;
   margin-right: auto;
-  /* background-color: #253C2F; */
+  background-color: #0b1f21 !important;
   /* width: 60% !important; */
   padding: 10px;
 }
@@ -87,12 +84,13 @@ body {
 label {
   /* color: #edeaea !important; */
   padding: 7px;
-  background-color: #edeaea !important;
+  background-color: #192329 !important;
   width: 100%;
   font-weight: normal;
   text-align: center;
   /* border-radius: 5px; */
   font-size: 12px;
+  margin: 0;
 }
 
 #transactTable label.transparentBG {
@@ -104,7 +102,7 @@ label {
 input[type=text] {
   box-sizing: border-box;
   background-color: #474747;
-  border: #474747;
+  border: none;
   padding: 5px;
   color: #EDEAEA;
   width: 250px;
@@ -115,13 +113,24 @@ input[type=text] {
 input[type=password] {
   box-sizing: border-box;
   background-color: #474747;
-  border: #474747;
+  border: none;
   padding: 5px;
   color: #EDEAEA;
   width: 250px;
   height: 40px;
   border-radius: 5px;
 }
+
+/* button{
+  background-color: #00b38f !important;
+  border: #00b38f !important;
+  color: white !important;
+  width: 120px !important;
+  font-weight: bold;
+  padding: 3px;
+  border-radius: 5px;
+  outline: none;
+} */
 
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -143,11 +152,11 @@ input[type=password] {
 .buttonlarge {
   background-color: #00b38f !important;
   border: #00b38f !important;
-  color: white !important;
+  color: black !important;
   width: 120px !important;
   font-weight: bold;
   padding: 3px;
-  border-radius: 1px;
+  border-radius: 5px;
   outline: none;
 }
 
@@ -199,7 +208,7 @@ select {
   -moz-appearance: none;
   appearance: none;
   cursor: pointer;
-  height: 30px !important;
+  height: 40px !important;
 }
 
 select option:hover {
@@ -244,6 +253,13 @@ thead td {
 table td {
   /* color: white; */
   border-color: #878585 !important;
+}
+
+tr:hover{
+  background-color: #0b1f21;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .table-body {
@@ -348,7 +364,7 @@ hr {
 .inactive {
   pointer-events: none;
   cursor: default;
-  color: #fff;
+  color: #fff;  
   background-color: #D3D3D3;
   border-color: #D3D3D3;
 }

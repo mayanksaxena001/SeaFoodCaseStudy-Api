@@ -8,7 +8,7 @@ import { DashboardService } from '../dashboard/dashboard.service';
 
 import swal from 'sweetalert2';
 import { WalletModal } from './wallet';
-import { TransferTokenModal } from '../dashboard/transaction';
+import { TransferTokenModal ,Account} from '../dashboard/transaction';
 import { User } from '../login/login';
 
 declare let $: any;
@@ -23,32 +23,33 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showGetPrivateKeyForm = true;
   waiting = false;
-  user: User = undefined;
+  user: User;
   profileDetailsVisible = false;
   navBarVisible = false;
   subscription: Subscription;
   tokenValue: number;
 
-  userAddress: string = undefined;
-  userAddresses: Account[];
+  userAddress: string;
+  userAddresses: Account[]=[];
   amountToTransfer: number;
   walletPath: any;
   walletMnemonic: any;
   loginPassword: string;
-  wallet: WalletModal = undefined;
-  
-  @ViewChild('requestTokenForm', { static: true }) requestTokenForm: any;
-  @ViewChild('transferTokenForm', { static: true }) transferTokenForm: any;
-  @ViewChild('getPrivateKeyForm', { static: true }) getPrivateKeyForm: any;
+  wallet: WalletModal;
 
-  constructor(@Inject('BASE_API_URL') private baseUrl: string,private loginService: LoginService, private router: Router,
+  @ViewChild('requestTokenForm') requestTokenForm: any;
+  @ViewChild('transferTokenForm') transferTokenForm: any;
+  @ViewChild('getPrivateKeyForm') getPrivateKeyForm: any;
+
+  constructor(@Inject('BASE_API_URL') private baseUrl: string, private loginService: LoginService, private router: Router,
     private dashboardService: DashboardService) {
-    console.log('Inside Header component constructor');  
+    console.log('Inside Header component constructor');
     this.subscription = this.dashboardService.navBar.subscribe(
       navBar => {
         this.navBarVisible = navBar;
         if (this.navBarVisible) {
           this.user = JSON.parse(localStorage.getItem('currentUser'));
+          this.getAllUsers();
           // if (this.userAddress != null && this.userAddresses !== undefined && this.userAddresses.length != 0) this.getAllUsers();
         }
       }
@@ -56,12 +57,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.profileDetailsVisible = false;
-    if (this.navBarVisible) {
-      this.user = JSON.parse(localStorage.getItem('currentUser'));
-      // this.getAllUsers();
-    }
-    // this.initialiseData();
+    this.profileDetailsVisible = false;
+    this.initialiseData();
   }
 
   initialiseData() {

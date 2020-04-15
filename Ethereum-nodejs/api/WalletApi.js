@@ -22,7 +22,6 @@ module.exports = {
 
     async getPrivateKey(req, res) {
         try {
-
             if(!req.body.password) throw new Error("Password required ");
             var user = await repo.findByUserName(req.decoded.username);
             var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);

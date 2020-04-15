@@ -14,15 +14,15 @@ import { Signup } from '../login';
 })
 export class SignUpComponent implements OnInit {
 
-  categoryType;
-  categoryTypes;
-  selectedCategory;
+  categoryType: any;
+  categoryTypes: { id: number; type: string; }[];
+  private selectedCategory: string;
   signup: Signup;
   waiting = false;
 
   constructor(private router: Router, private loginService: LoginService) {
-    console.log('Inside Signup component constructor');  
-   }
+    console.log('Inside Signup component constructor');
+  }
 
   ngOnInit() {
 

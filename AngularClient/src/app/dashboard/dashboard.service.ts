@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Entity, Supplier } from './entity';
-import { Transaction, TransferTokenModal } from './transaction';
+import { Transaction, TransferTokenModal,Account } from './transaction';
 import { Transact } from './transact';
 import { Telemetry, Sensor } from './sensor';
 
@@ -86,7 +86,7 @@ export class DashboardService {
         return this.http.get<Supplier[]>('contract/suppliers');
     }
     //TODO : Update data type
-    updateTransactionSensorId(data): Observable<any> {
+    updateTransactionSensorId(data: any): Observable<any> {
         return this.http.put<any>('contract/transaction/accept', data);
     }
 

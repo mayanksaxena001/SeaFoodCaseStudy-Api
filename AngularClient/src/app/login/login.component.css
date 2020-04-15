@@ -5,5 +5,18 @@
   height: 100%;
   width: 100%;
   justify-content: center;
-  background-color:#040d14;
+  background-color: #040d14;
+  padding: 250px 100px;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 150px;
+}
+
+.btn-right {
+  margin-left: auto;
 }

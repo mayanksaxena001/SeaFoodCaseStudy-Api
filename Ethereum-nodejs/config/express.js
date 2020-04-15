@@ -5,27 +5,27 @@ var sequelize = require('./database.seq.config');
 module.exports = (app) => {
     console.log('Setting cors options in server');
     const whitelist = ['http://localhost:4200', 'http://localhost:8001'];
-    const allowedheaders = ["Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,x-access-token"];
+    const allowedheaders = ["Origin, X-Requested-With", "Content-Type", "Accept","x-access-token"];
+    const exposedheaders = ["x-access-token"];
     const methods = ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'];
-    // console.log('Setting cors options in server');
     var corsOptions = {
         origin: whitelist,
-        optionsSuccessStatus: 200 ,// some legacy browsers (IE11, various SmartTVs) choke on 204
-        // origin ? : boolean | string | RegExp | (string | RegExp)[] | CustomOrigin;
+        optionsSuccessStatus: 200,// some legacy browsers (IE11, various SmartTVs) choke on 204
         methods: methods,
         allowedHeaders: allowedheaders,
-        // exposedHeaders ? : string | string[];
-        credentials  : false,
-        maxAge  : 84000,
-        preflightContinue  : true,
-        optionsSuccessStatus  : 200
+        exposedHeaders: exposedheaders,
+        credentials: false,
+        maxAge: 84000,
+        // preflightContinue: true,
+        optionsSuccessStatus: 200
     }
     app.use('*', cors(corsOptions)); // preflight OPTIONS; put before other routes
     // app.use((req, res, next) => {
-    //     // res.header("Access-Control-Allow-Origin", whitelist);
-    //     // res.header(allowedheaders);
-    //     // res.header('Access-Control-Allow-Methods', methods);
-    //     // res.header('Content-Type', 'application/json');
+    //     res.header("Access-Control-Allow-Origin", whitelist);
+    //     res.header("Access-Control-Allow-Headers", allowedheaders);
+    //     res.header("Access-Control-Expose-Headers", exposedheaders);
+    //     res.header('Access-Control-Allow-Methods', methods);
+    //     res.header('Content-Type', 'application/json');
     //     next();
     // });
     app.get('/', function (req, res) {

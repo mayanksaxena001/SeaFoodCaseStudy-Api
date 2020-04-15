@@ -32,7 +32,7 @@
             "production": {
               "budgets": [
                 {
-                  "type": "anyComponentStyle",
+                  "type": "all",
                   "maximumWarning": "6kb"
                 }
               ],

@@ -15,7 +15,7 @@ import { Login } from './login';
 export class LoginComponent implements OnInit {
 
   waiting = false;
-  loginCredentials: Login = undefined;
+  loginCredentials: Login ;
 
   constructor(private router: Router, private loginService: LoginService) { 
     console.log('Inside Login component constructor');  
@@ -25,10 +25,10 @@ export class LoginComponent implements OnInit {
 
     localStorage.clear();
 
-    // this.loginCredentials = {
-    //   username: '',
-    //   password: ''
-    // }
+    this.loginCredentials = {
+      username: '',
+      password: ''
+    }
   }
 
   login() {

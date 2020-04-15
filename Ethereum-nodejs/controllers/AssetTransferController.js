@@ -238,14 +238,16 @@ class AssetTransferController {
         return await this._instance.editAsset(_address, _id, _value, _quantity, this._gas);
     }
 
-    async getAccounts() {
+    async getAccounts(value) {
         var accounts = [];
         var _accounts = await repo.getAddressDetails();
         for (var i = 0; i < _accounts.length; i++) {
             var account = {};
             account.fullName = _accounts[i].name;
             account.account = _accounts[i].account;
-            accounts.push(account);
+            if (account.account != value) {
+                accounts.push(account);
+            }
         }
         return accounts;
     }

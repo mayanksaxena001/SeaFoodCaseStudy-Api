@@ -22,9 +22,9 @@ declare let $: any;
 })
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('editEntityForm', { static: true }) editEntityForm: any;
-  @ViewChild('addEntityForm', { static: true }) addEntityForm: any;
-  @ViewChild('addSensorForm', { static: true }) addSensorForm: any;
+  @ViewChild('editEntityForm') editEntityForm: any;
+  @ViewChild('addEntityForm') addEntityForm: any;
+  @ViewChild('addSensorForm') addSensorForm: any;
   @ViewChild('sensorMap') sensorMapElement: any;
   @ViewChild('transactionMap') transactionMapElement: any;
 
@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   transact: Transact;
 
   entity: Entity;
-  addEntityModal: EntityModal | undefined;
+  addEntityModal: EntityModal;
   editEntityModal: EntityModal;
 
   subscription: Subscription;
@@ -73,29 +73,16 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private dashboardService: DashboardService,
     private loginService: LoginService, private router: Router) {
-    console.log('Inside Dashboard component constructor');  
-    this.subscription = dashboardService.allEntities.subscribe(
-      allEntities => {
-        if(allEntities){
-          console.log('Updating all entities on dashboard')
-          this.getUserDetails();
-          // this.displayAssets();
-          // this.getTransferableAssets();
-          // this.getTransactions();
-          // this.getSuppliers();
-        }
-      }
-      , (err) => { },
-      () => {
-        //TODO : not getting called,CHeck
-      });
+    console.log('Inside Dashboard component constructor');
   }
 
   ngOnInit() {
     this.initialiseData();
-    this.getUserDetails();
-    this.dashboardService.showNavbar(true);
+    const observeEntities = this.observableEntities();
+    this.subscription = this.dashboardService.allEntities.subscribe(observeEntities);
+    //Already called on subscription
     this.dashboardService.updateAllEntities(true);
+    this.dashboardService.showNavbar(true);
   }
   ngAfterViewInit(): void {
     // this.initGoogleMap();
@@ -118,31 +105,29 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getUserDetails() {
     this.waiting = true;
-
     this.loginService.getUserDetails().subscribe(
       (data) => {
         this.waiting = false;
-
         if (data) {
           this.user = data;
           localStorage.setItem('currentUser', JSON.stringify(this.user));
-          this.dashboardService.showNavbar(true);
+          this.dashboardService.showNavbar(true);//TODO: user not set on header in first nav bar change,need to look 
         } else {
           swal('Error!', 'Error fetching user details', 'error');
         }
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
-
         if (err.error instanceof Error) {
           console.log('An error occurred: ', err.error.message); // client
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
-
         swal('Error!', 'Backend Error fetching user details', 'error');
       }
-    );
+      , () => {
+        this.displayAssets();
+      });
   }
 
   initialiseData() {
@@ -242,6 +227,29 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.availableSensors = [];
   }
 
+  observableEntities() {
+    return {
+      next: (x: boolean) => {
+        if (x) {
+          console.log('Updating all entities on dashboard');
+          this.updateDataOnView();
+        }
+      },
+      error: (err: string) => { console.error('Observer got an error: ' + err); },
+      complete: () => {
+        console.log('Observer got a complete notification');
+      },
+    };
+  }
+
+  updateDataOnView() {
+    this.getUserDetails();
+    // this.displayAssets(); //TODO: since binded into callback fn of getUserDetails
+    this.getTransferableAssets();
+    this.getTransactions();
+    this.getSuppliers();
+  }
+
   getTransferableAssets() {
 
     this.waiting = true;
@@ -249,17 +257,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dashboardService.getTrasferableAssets().subscribe(
       (data) => {
         this.waiting = false;
-
         if (data) {
-
           this.noTransferEntityData = false;
           this.transferEntities = data;
-
         } else {
           this.noTransferEntityData = true;
-
           swal('Error!', 'Error fetching assets', 'error');
-
         }
       },
       (err: HttpErrorResponse) => {
@@ -288,10 +291,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   displayAssets() {
     if (this.user.type === 'PRODUCER' || this.user.type === 'CONSUMER') {
       this.getEntities();
-
-    } else {
+    } else if (this.user.type === 'SUPPLIER') {
       this.getSensors();
-
     }
   }
 
@@ -361,15 +362,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dashboardService.getUserEntities().subscribe(
       (data) => {
         this.waiting = false;
-
         if (data && data.length > 0) {
           this.noEntityData = false;
-
           this.entities = data;
-
         } else if (data.length === 0) {
           this.noEntityData = true;
-
         } else {
           this.noEntityData = true;
           swal('Error!', 'Error fetching user entities', 'error');
@@ -394,31 +391,22 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getSensors() {
     this.waiting = true;
-
     this.dashboardService.getSensors().subscribe(
       (data) => {
         this.waiting = false;
-        console.log(data);
-
         if (data && data.length > 0) {
           this.noSensorData = false;
           this.sensors = data;
-
         } else if (data.length === 0) {
           this.noSensorData = true;
-
         } else {
           this.noSensorData = true;
-
           swal('Error!', 'Error fetching Sensors', 'error');
-
         }
       },
       (err: HttpErrorResponse) => {
         this.waiting = false;
         this.noSensorData = true;
-
-
         if (err.error instanceof Error) {
           console.log('An error occurred: ', err.error.message); // client
         } else {
@@ -518,18 +506,16 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addEntity() {
-
     this.waiting = true;
-
     this.dashboardService.addEntity(this.addEntityModal).subscribe(
       (data) => {
         this.waiting = false;
         swal('Success!', 'Entity/Asset Added!', 'success').then(
           (result) => {
             if (result.value) {
-              this.dashboardService.updateAllEntities(true);
+              this.getEntities();
+              // this.dashboardService.updateAllEntities(true);
               this.addEntityForm.reset();
-
             }
           }
         );
@@ -542,7 +528,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           console.log(`Backend returned code ${err.status}, body was: ${err.error}`); // server
         }
-
         swal('Error!', 'Backend Error while adding Entity/Asset', 'error');
       }
     );
@@ -666,7 +651,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-
   confirmTransaction() {
 
     this.waiting = true;
@@ -717,12 +701,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.confirmTransaction();
   }
 
-  sensorIdClicked(data) {
+  sensorIdClicked(data: Sensor) {
     this.sensor = data;
     this.getSensorTelemetries(data.id);
   }
 
-  entityIdClicked(value) {
+  entityIdClicked(value: String) {
 
     this.waiting = true;
 
@@ -746,12 +730,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  transactionIdClicked(data) {
+  transactionIdClicked(data: Transaction) {
     this.transaction = data;
     this.getTransactionTelemetries(data.id, data.sensorId);
   }
 
-  getTransactionTelemetries(trackId, sensorId) {
+  getTransactionTelemetries(trackId: String, sensorId: String) {
     this.waiting = true;
     var telemetries;
     this.dashboardService.getTransactionTelemetries(trackId).subscribe(
@@ -811,7 +795,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  getSensorById(id) {
+  getSensorById(id: String) {
 
     this.dashboardService.getSensorById(id).subscribe(
       (data) => {
@@ -836,13 +820,13 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  attachSensor(data) {
+  attachSensor(data: { supplier: string; id: string; action: string; }) {
     this.updateTransactionModal.address = data.supplier;
     this.updateTransactionModal.transactionId = data.id;
     this.updateTransactionModal.action = data.action;
   }
 
-  acceptSensor(action) {
+  acceptSensor(action: string) {
 
     if (!this.sensorName && action === 'ACCEPT') {
       swal('Error!', 'Please select a sensor!', 'error');
@@ -860,7 +844,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  getSelectedSensor(data) {
+  getSelectedSensor(data: string) {
     this.selectedSensor = data;
   }
 
@@ -987,7 +971,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.unsubscribe();
   }
 
-  getSelectedSupplier(selectedSupplier) {
+  getSelectedSupplier(selectedSupplier: any) {
     this.selectedSupplier = selectedSupplier;
   }
 
@@ -1002,3 +986,4 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 }
+

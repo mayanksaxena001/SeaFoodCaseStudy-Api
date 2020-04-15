@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { ApiInterceptor } from './api-interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -43,9 +41,7 @@ import { environment } from '../environments/environment';
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule,
-    FlexLayoutModule,
-    BrowserAnimationsModule
+    AppRoutingModule
   ],
   providers: [
     AuthService,

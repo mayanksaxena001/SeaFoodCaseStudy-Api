@@ -38,7 +38,8 @@ module.exports = {
     //All the entities of the current user
     async getAccounts(req, res) {
         try {
-            var accounts = await _contract.getAccounts();
+            var account = req.decoded.account;
+            var accounts = await _contract.getAccounts(account);
             return res.status(200).send(accounts);
         } catch (err) {
             return res.status(500).send(err);

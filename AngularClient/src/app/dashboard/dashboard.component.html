@@ -1,14 +1,16 @@
 <div class="preloader" [hidden]="!waiting"></div>
 
 <div class="container-fluid maincontainer">
-  <div class="row margin5 padding10" *ngIf="user?.type === 'CONSUMER'">
-    <div class="col-sm-2 padding10 entities">
-      <label>BUY ENTITIES</label>
-    </div>
 
-    <div class="col-sm-8 padding10 entitytable">
-      <table class="table table-sm table-dark viewtable mainTable">
-        <thead class="entity-row">
+  <div class="entities-container" *ngIf="user?.type === 'CONSUMER'">
+    <div class="left-container">
+      <div class="left-container-label">
+        <label>BUY ENTITIES</label>
+      </div>
+    </div>
+    <div class="table-container">
+      <table class="table table-sm table-dark ">
+        <thead>
           <tr>
             <td>ENTITY</td>
             <td>QUANTITY</td>
@@ -23,7 +25,7 @@
             <b>No Data Available</b>
           </p>
         </div>
-        <tbody class="table-body entity-row" *ngIf='!noTransferEntityData'>
+        <tbody *ngIf='!noTransferEntityData'>
           <tr *ngFor="let x of transferEntities">
             <td>{{ x.name }}</td>
             <td>{{ x.quantity }}</td>
@@ -31,7 +33,8 @@
             <td>{{ x.username }}</td>
             <td>{{ x.type }}</td>
             <td class="a-center">
-              <button (click)="transactBtnClicked(x)" class="buttonsmall" data-toggle="modal" data-target="#transactEntity">
+              <button (click)="transactBtnClicked(x)" class="buttonsmall" data-toggle="modal"
+                data-target="#transactEntity">
                 <span>
                   <img src="assets/SVGs/transact_dark.svg">
                 </span>
@@ -43,31 +46,21 @@
     </div>
   </div>
 
-  <div *ngIf="user?.type === 'CONSUMER'">
-    <br>
-    <br>
-  </div>
-
-
-  <div class="row margin5 padding15">
-    <div class="col-sm-2 padding10 entities">
-      <div *ngIf="user?.type === 'PRODUCER' || user?.type === 'CONSUMER'">
+  <div class="entities-container" *ngIf="user?.type === 'PRODUCER' || user?.type === 'CONSUMER'">
+    <div class="left-container">
+      <div class="left-container-label">
         <label>ENTITIES</label>
-        <button class="float-right buttonlarge" *ngIf="user?.type === 'PRODUCER'" style="margin-top:5%; width:60% !important" data-toggle="modal"
-          data-target="#addEntity">ADD ENTITY</button>
       </div>
-      <div *ngIf="user?.type === 'SUPPLIER'">
-        <label>SENSORS</label>
-        <button class="float-right action-button" (click)='updateSensorModal()' style="margin-top:5%; width:60% !important" data-toggle="modal"
-          data-target="#addSensor">ADD SENSOR</button>
+      <div class="button-right">
+        <button class="buttonlarge" *ngIf="user?.type === 'PRODUCER'" data-toggle="modal" data-target="#addEntity">ADD
+          ENTITY</button>
       </div>
     </div>
-    <div class="col-sm-8 padding10 scrollablediv" *ngIf="user?.type === 'PRODUCER' || user?.type === 'CONSUMER'">
-
-      <table class="table table-sm table-dark viewtable mainTable">
-        <thead class="entity-row">
+    <div class="table-container">
+      <table class="table table-sm table-dark">
+        <thead>
           <tr>
-            <td style="width:17% !important">TRACK ID</td>
+            <td>TRACK ID</td>
             <td>ENTITY</td>
             <td>VALUE</td>
             <td>QUANTITY</td>
@@ -81,21 +74,17 @@
             <b>No Data Available</b>
           </p>
         </div>
-        <tbody class="table-body entity-row" *ngIf='!noEntityData'>
+        <tbody *ngIf='!noEntityData'>
           <tr *ngFor="let x of entities">
             <td>
-              <span (click)="entityIdClicked(x.id)" class="buttonlink aqua_color trackId" data-toggle="modal" data-target="#entityDetails">{{ x.id }} </span>
+              <span (click)="entityIdClicked(x.id)" class="buttonlink aqua_color trackId" data-toggle="modal"
+                data-target="#entityDetails">{{ x.id }} </span>
             </td>
-            <td [ngClass]="user?.type === 'PRODUCER' ?
-              'padding_left' : 'zero_padding'">{{ x.name}}</td>
-            <td [ngClass]="user?.type === 'PRODUCER' ?
-              'padding_left' : 'zero_padding'">{{ x.value }}</td>
-            <td [ngClass]="user?.type === 'PRODUCER' ?
-              'padding_left_1' : 'padding_left'">{{ x.quantity }}</td>
-            <td [ngClass]="user?.type === 'PRODUCER' ?
-              'padding_left_1' : 'padding_left'">{{ x.createdAt }}</td>
-            <td [ngClass]="user?.type === 'PRODUCER' ?
-              'padding_left_1' : 'padding_left'">{{ x.updatedAt }}</td>
+            <td >{{ x.name}}</td>
+            <td >{{ x.value }}</td>
+            <td >{{ x.quantity }}</td>
+            <td >{{ x.createdAt }}</td>
+            <td >{{ x.updatedAt }}</td>
             <td *ngIf="user?.type === 'PRODUCER'">
               <button (click)="editEntity(x)" class="buttonsmall" data-toggle="modal" data-target="#editEntity">
                 <span>
@@ -107,10 +96,21 @@
         </tbody>
       </table>
     </div>
-    <div class="col-sm-8 padding10 scrollablediv" *ngIf="user?.type === 'SUPPLIER'">
+  </div>
 
-      <table class="table table-sm table-dark viewtable mainTable">
-        <thead class="entity-row">
+  <div class="entities-container" *ngIf="user?.type === 'SUPPLIER'">
+    <div class="left-container">
+      <div class="left-container-label">
+        <label>SENSORS</label>
+      </div>
+      <div class="button-right">
+        <button class="buttonlarge" (click)='updateSensorModal()' data-toggle="modal" data-target="#addSensor">ADD
+          SENSOR</button>
+      </div>
+    </div>
+    <div class="table-container">
+      <table class="table table-sm table-dark">
+        <thead>
           <tr>
             <td>TRACK ID</td>
             <td>SENSOR</td>
@@ -124,10 +124,11 @@
             <b>No Data Available</b>
           </p>
         </div>
-        <tbody class="table-body entity-row" *ngIf='!noSensorData'>
+        <tbody *ngIf='!noSensorData'>
           <tr *ngFor="let x of sensors">
             <td>
-              <span (click)="sensorIdClicked(x)" class="buttonlink aqua_color trackId" data-toggle="modal" data-target="#sensorDetails">{{ x.id }} </span>
+              <span (click)="sensorIdClicked(x)" class="buttonlink aqua_color trackId" data-toggle="modal"
+                data-target="#sensorDetails">{{ x.id }} </span>
             </td>
             <td>{{ x.name }}</td>
             <td>
@@ -147,27 +148,25 @@
         </tbody>
       </table>
     </div>
-    <br>
-    <br>
   </div>
 
-
-  <div class="row margin5 padding15">
-    <div class="col-sm-2 padding10 entities">
-      <label>TRANSACTIONS</label>
+  <div class="entities-container">
+    <div class="left-container">
+      <div class="left-container-label">
+        <label>TRANSACTIONS</label>
+      </div>
     </div>
-    <div class="col-sm-8 padding10 scrollablediv">
-
-      <table class="table table-sm table-dark viewtable mainTable">
-        <thead class="entity-row">
+    <div class="table-container">
+      <table class="table table-sm table-dark">
+        <thead>
           <tr>
-            <td style="width:18% !important">TRACK ID</td>
+            <td>TRACK ID</td>
             <td>STATUS</td>
             <td>FROM</td>
             <td>TO</td>
             <td>ENTITY</td>
             <td>AMOUNT</td>
-            <td style="width: 200px !important;" class="a-center" *ngIf="user?.type === 'SUPPLIER'">SENSOR ALERT</td>
+            <td *ngIf="user?.type === 'SUPPLIER'">SENSOR ALERT</td>
           </tr>
         </thead>
         <div *ngIf='noTransactionData'>
@@ -175,27 +174,23 @@
             <b>No Data Available</b>
           </p>
         </div>
-        <tbody class="table-body entity-row" *ngIf='!noTransactionData'>
-
+        <tbody *ngIf='!noTransactionData'>
           <tr *ngFor="let x of transactions">
             <td>
-              <span (click)="transactionIdClicked(x)" class="buttonlink aqua_color trackId" data-toggle="modal" data-target="#transactionDetails">{{ x.id }} </span>
+              <span (click)="transactionIdClicked(x)" class="buttonlink aqua_color trackId" data-toggle="modal"
+                data-target="#transactionDetails">{{ x.id }} </span>
             </td>
+            <td>
+              <p [ngClass]="getStatusColor(x?.status) ?
+              'green_color' : 'red_color'">{{ x.status }}</p>
+            </td>
+            <td>{{ x.fromUsername }}</td>
+            <td>{{ x.toUsername }}</td>
+            <td>{{ x.assetName }}</td>
+            <td>{{ x.amount }}</td>
             <td *ngIf="user?.type === 'SUPPLIER'">
-              <p style="padding-left:10px;" [ngClass]="getStatusColor(x?.status) ?
-              'green_color' : 'red_color'">{{ x.status }}</p>
-            </td>
-            <td *ngIf="user?.type !== 'SUPPLIER'">
-              <p style="padding-left:0px;" [ngClass]="getStatusColor(x?.status) ?
-              'green_color' : 'red_color'">{{ x.status }}</p>
-            </td>
-            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_3' : 'padding_left'">{{ x.fromUsername }}</td>
-
-            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_3' : 'padding_left'">{{ x.toUsername }}</td>
-            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_3' : 'padding_left'">{{ x.assetName }}</td>
-            <td [ngClass]="user?.type === 'SUPPLIER' ? 'padding_left_2' : 'padding_left'">{{ x.amount }}</td>
-            <td style="width: 200px !important;" class="a-center" *ngIf="user?.type === 'SUPPLIER'">
-              <button (click)="attachSensor(x)" [disabled]="x.status === 'DELIVERED' " class="action-button" data-toggle="modal" data-target="#attachSensor">{{ x.action }}
+              <button (click)="attachSensor(x)" [disabled]="x.status === 'DELIVERED' " class="buttonlarge"
+                data-toggle="modal" data-target="#attachSensor">{{ x.action }}
               </button>
             </td>
           </tr>
@@ -204,9 +199,10 @@
     </div>
   </div>
 
+
   <!-- Attach Sensor -->
-  <div class="modal fade" id="attachSensor" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="attachSensor" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -214,11 +210,14 @@
         <div class="modal-header">
           <div class="row  padding10">
             <div class="col-sm-12">
-              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'ACCEPT' ">ATTACH SENSOR
+              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'ACCEPT' ">ATTACH
+                SENSOR
               </p>
-              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'MARK PICKED' ">CONFIRM PICKUP
+              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'MARK PICKED' ">
+                CONFIRM PICKUP
               </p>
-              <p class="float-left popupHeading marginl10 " *ngIf="updateTransactionModal?.action === 'MARK DELIVERED' ">CONFIRM DELIVERY
+              <p class="float-left popupHeading marginl10 "
+                *ngIf="updateTransactionModal?.action === 'MARK DELIVERED' ">CONFIRM DELIVERY
               </p>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -230,8 +229,8 @@
           <form #attachSensorForm="ngForm">
             <div class="row padding10">
               <div class="col-sm-12 padding10">
-                <input type="text" class="popupinput" [(ngModel)]="updateTransactionModal.transactionId" [disabled]=true placeholder="Transaction Id"
-                  name='transactionId' #name='ngModel' required>
+                <input type="text" class="popupinput" [(ngModel)]="updateTransactionModal.transactionId" [disabled]=true
+                  placeholder="Transaction Id" name='transactionId' #name='ngModel' required>
               </div>
               <div class="col-sm-12 padding10 " *ngIf="updateTransactionModal?.action === 'ACCEPT' ">
                 <select [(ngModel)]="sensorName" name="type" (change)='getSelectedSensor(sensorName)' required>
@@ -259,8 +258,8 @@
   </div>
 
   <!-- Add Sensor -->
-  <div class="modal fade" id="addSensor" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="addSensor" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -269,7 +268,8 @@
           <div class="row  padding10">
             <div class="col-sm-12">
               <p class="float-left popupHeading marginl10 ">ADD SENSOR</p>
-              <button type="button" class="close" (click)='closeAddSensorModal()' data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" (click)='closeAddSensorModal()' data-dismiss="modal"
+                aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -279,12 +279,13 @@
           <form #addSensorForm="ngForm">
             <div class="row padding10">
               <div class="col-sm-12 padding10">
-                <input type="text" class="popupinput" [(ngModel)]="addSensorModal.address" [disabled]=true placeholder="Address" name='address'
-                  #address='ngModel' required>
+                <input type="text" class="popupinput" [(ngModel)]="addSensorModal.address" [disabled]=true
+                  placeholder="Address" name='address' #address='ngModel' required>
 
               </div>
               <div class="col-sm-12 padding10 ">
-                <input type="text" class="popupinput" [(ngModel)]="addSensorModal.name" placeholder="Name" name='name' #name='ngModel' required>
+                <input type="text" class="popupinput" [(ngModel)]="addSensorModal.name" placeholder="Name" name='name'
+                  #name='ngModel' required>
                 <small *ngIf="name.errors && (name.dirty || name.touched)" class="error-message">
                   <div class="validation-msg" [hidden]="!name.errors.required">
                     Name is required.
@@ -296,7 +297,8 @@
               <div class="col-sm-8">
               </div>
               <div class="col-sm-4">
-                <button (click)="addSensor()" class="buttonlink float-right" [disabled]="!addSensorForm.form.valid" data-dismiss="modal">Add
+                <button (click)="addSensor()" class="buttonlink float-right" [disabled]="!addSensorForm.form.valid"
+                  data-dismiss="modal">Add
                   <span>
                     <img src="assets/SVGs/arrow_dark.svg">
                   </span>
@@ -311,8 +313,8 @@
   </div>
 
   <!-- Add Modal -->
-  <div class="modal fade" id="addEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="addEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -331,7 +333,8 @@
           <form #addEntityForm="ngForm">
             <div class="row padding10">
               <div class="col-sm-4">
-                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.name" placeholder="Name" name='name' #name='ngModel' required>
+                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.name" placeholder="Name" name='name'
+                  #name='ngModel' required>
                 <small *ngIf="name.errors && (name.dirty || name.touched)" class="error-message">
                   <div class="validation-msg" [hidden]="!name.errors.required">
                     Name is required.
@@ -339,8 +342,8 @@
                 </small>
               </div>
               <div class="col-sm-4">
-                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.value" placeholder="Value" name='value' #value='ngModel'
-                  required>
+                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.value" placeholder="Value"
+                  name='value' #value='ngModel' required>
                 <small *ngIf="value.errors && (value.dirty || value.touched)" class="error-message">
                   <div class="validation-msg" [hidden]="!value.errors.required">
                     Value is required.
@@ -348,8 +351,8 @@
                 </small>
               </div>
               <div class="col-sm-4">
-                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.quantity" pattern="[0-9]+" placeholder="Quantity" name='quantity'
-                  #quantity='ngModel' required>
+                <input type="text" class="popupinput" [(ngModel)]="addEntityModal.quantity" pattern="[0-9]+"
+                  placeholder="Quantity" name='quantity' #quantity='ngModel' required>
                 <small *ngIf="quantity.errors && (quantity.dirty || quantity.touched)" class="error-message">
                   <div class="validation-msg" [hidden]="!quantity.errors.required">
                     Quantity is required.
@@ -364,7 +367,8 @@
               <div class="col-sm-8">
               </div>
               <div class="col-sm-4">
-                <button (click)="addEntity()" class="buttonlink float-right" [disabled]="!addEntityForm.form.valid" data-dismiss="modal">Add
+                <button (click)="addEntity()" class="buttonlink float-right" [disabled]="!addEntityForm.form.valid"
+                  data-dismiss="modal">Add
                   <span>
                     <img src="assets/SVGs/arrow_dark.svg">
                   </span>
@@ -379,8 +383,8 @@
   </div>
 
   <!--Edit Modal -->
-  <div class="modal fade" id="editEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="editEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content text-center popupcontainer">
@@ -400,8 +404,8 @@
 
               <div class="row padding10">
                 <div class="col-sm-6">
-                  <input type="text" class="popupinput" [(ngModel)]="editEntityModal.value" placeholder="Value" name='editValue' #editValue='ngModel'
-                    required>
+                  <input type="text" class="popupinput" [(ngModel)]="editEntityModal.value" placeholder="Value"
+                    name='editValue' #editValue='ngModel' required>
                   <small *ngIf="editValue.errors && (editValue.dirty || editValue.touched)" class="error-message">
                     <div class="value-validation-msg" [hidden]="!editValue.errors.required">
                       Value is required.
@@ -409,9 +413,10 @@
                   </small>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" class="popupinput float-left" [(ngModel)]="editEntityModal.quantity" pattern="[0-9]+" placeholder="Quantity"
-                    name='editQuantity' #editQuantity='ngModel' required>
-                  <small *ngIf="editQuantity.errors && (editQuantity.dirty || editQuantity.touched)" class="error-message">
+                  <input type="text" class="popupinput float-left" [(ngModel)]="editEntityModal.quantity"
+                    pattern="[0-9]+" placeholder="Quantity" name='editQuantity' #editQuantity='ngModel' required>
+                  <small *ngIf="editQuantity.errors && (editQuantity.dirty || editQuantity.touched)"
+                    class="error-message">
                     <div [hidden]="!editQuantity.errors.required">
                       Quantity is required.
                     </div>
@@ -425,7 +430,8 @@
                 <div class="col-sm-8">
                 </div>
                 <div class="col-sm-4">
-                  <button (click)="updateEntity()" class="buttonlink float-right" [disabled]="!editEntityForm.form.valid" data-dismiss="modal">Edit
+                  <button (click)="updateEntity()" class="buttonlink float-right"
+                    [disabled]="!editEntityForm.form.valid" data-dismiss="modal">Edit
                     <span>
                       <img src="assets/SVGs/arrow_dark.svg">
                     </span>
@@ -441,8 +447,8 @@
   </div>
 
   <!-- Transact Modal -->
-  <div class="modal fade" id="transactEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="transactEntity" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -509,7 +515,8 @@
                     <p class="transparentBG float-left">{{transact?.date}}</p>
                   </td>
                   <td>
-                    <select [(ngModel)]="supplierName" name="type" (change)='getSelectedSupplier(supplierName)' required>
+                    <select [(ngModel)]="supplierName" name="type" (change)='getSelectedSupplier(supplierName)'
+                      required>
                       <option value="undefined" disabled selected>Select a supplier</option>
                       <option *ngFor="let supplier of suppliers" [ngValue]="supplier.address">{{supplier.name}}</option>
                     </select>
@@ -537,8 +544,8 @@
   </div>
 
   <!--Edit Modal -->
-  <div class="modal fade" id="entityDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="entityDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content text-center popupcontainer">
@@ -600,8 +607,8 @@
   </div>
 
   <!--Transaction Details Modal -->
-  <div class="modal fade" id="transactionDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
-    data-keyboard="false" aria-hidden="true">
+  <div class="modal fade" id="transactionDetails" role="dialog" aria-labelledby="exampleModalLabel"
+    data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content text-center popupcontainer">
@@ -764,8 +771,8 @@
   </div>
 
   <!--Sensor Details Modal -->
-  <div class="modal fade" id="sensorDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false"
-    aria-hidden="true">
+  <div class="modal fade" id="sensorDetails" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static"
+    data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content text-center popupcontainer">

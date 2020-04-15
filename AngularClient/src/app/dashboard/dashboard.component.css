@@ -1,181 +1,126 @@
- user-label {
-   color: #edeaea !important;
-   padding: 14px !important;
-   background-color: #474747 !important;
-   width: 100% !important;
-   font-weight: normal;
-   text-align: center;
-   border-radius: 5px;
-   font-size: 12px;
-   margin: 5px;
- }
+.entitytable {
+  position: relative;
+  height: 150px !important;
+  padding: inherit;
+  /* top: -22px; */
+}
 
- label.adminlabel {
-   /* position: relative; */
-   background: #fff !important;
-   margin: 10px;
-   /* top: -64px; */
-   border-radius: 0px;
-   cursor: pointer;
-   /* padding: 5px; */
-   right: 60px;
-   max-width: fit-content;
- }
+.maincontainer {
+  background-color: #040d14;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: 100%;
+}
 
- .admin-details {
-   position: absolute;
-   margin: 5px;
-   background: #fff !important;
-   right: 6.35%;
-   top: 55px;
-   cursor: pointer;
-   padding: 3px;
-   max-width: -moz-fit-content;
-   z-index: 1000;
-   width: 26.83%;
- }
+.left-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 25px;
+  width: 20%;
+  margin-right: 25px;
+}
 
- .profile-details {
-   background: #fff;
-   padding: 10px;
- }
+.left-container-label{
+  margin-bottom: 20px;
+}
 
- .blockchain-details {
-   padding: 10px;
-   background: #00b38f;
- }
+.table-container{
+  /* width: 55%; */
+  align-self: center;
+  width: 75%;
+  overflow-y: auto;
+  max-height: 250px;
+  scrollbar-color: #0b1f21 transparent;
+}
 
- span.username {
-   float: left;
-   padding-right: 10px;
- }
+.entities-container{
+  display: flex;
+  justify-content: flex-start;
+  margin: 20px;
+  width: 75%;
+}
 
- span.useraddress {
-   float: right;
-   color: #00b38f !important;
- }
+.button-right {
+  margin-left: auto;
+}
 
- span.logout {
-   position: absolute;
-   top: 27px;
-   right: 40px;
-   cursor: pointer;
- }
+td {
+  width: 150px !important;
+  font-size: 12px;
+  font-weight: normal;
+}
 
- .entitytable {
-   position: relative;
-   height: 150px !important;
-   padding: inherit;
-   top: -22px;
- }
+.entity-row {
+  /* text-align: center !important; */
+}
 
- td {
-   width: 150px !important;
-   font-size: 12px;
-   font-weight: normal;
- }
+.entity-quantity {
+  padding-left: 100px !important;
+}
 
- .entity-row {
-   /* text-align: center !important; */
- }
+.trackId {
+  white-space: nowrap;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
 
- .entity-quantity {
-   padding-left: 100px !important;
- }
+.transTo {
+  white-space: nowrap;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
 
- .validation-msg {
-   padding-left: 10px;
- }
+#transactTable td p {
+  margin-left: 6%;
+}
 
- .value-validation-msg {
-   padding-left: 15px;
- }
+td select {
+  width: inherit;
+}
 
- .profile-details-span {
-   text-align: right;
- }
+.green_color {
+  color: green;
+  font-weight: bold;
+}
 
- .user-balance {
-   font-size: 25px;
-   margin-top: 3%;
-   color: #000;
- }
+.red_color {
+  color: red;
+  font-weight: bold;
+}
 
- .request-token {
-   margin-top: 4% !important;
-   color: blue !important;
- }
+.map {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 500px;
+  display: block;
+}
 
- .trackId {
-   white-space: nowrap;
-   width: 100px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   display: block;
- }
+.mainTable td {
+  border-bottom: 1px solid #878585;
+}
 
- .transTo {
-   white-space: nowrap;
-   width: 100px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   display: block;
- }
+.padding_left {
+  /* padding-left: 7px !important; */
+}
 
- .token {
-   font-size: 9.5px;
- }
+.padding_left_1 {
+  /* padding-left: 12px !important; */
+}
 
- .request-token-dialog {
-   width: 25% !important;
- }
+.padding_left_2 {
+  padding-left: 10px !important;
+}
 
- #transactTable td p {
-   margin-left: 6%;
- }
+.padding_left_3 {
+  padding-left: 15px !important;
+}
 
- td select {
-   width: inherit;
- }
-
- .green_color {
-   color: green;
-   font-weight: bold;
- }
-
- .red_color {
-   color: red;
-   font-weight: bold;
- }
-
- .map {
-   margin: 0;
-   padding: 0;
-   width: 100%;
-   height: 500px;
-   display: block;
- }
-
- .mainTable td {
-   border-bottom: 1px solid #878585;
- }
-
- .padding_left {
-   padding-left: 7px !important;
- }
-
- .padding_left_1 {
-   padding-left: 12px !important;
- }
-
- .padding_left_2 {
-   padding-left: 10px !important;
- }
-
- .padding_left_3 {
-   padding-left: 15px !important;
- }
-
- .zero_padding {
-   padding-left: 0px !important;
- }
+.zero_padding {
+  padding-left: 0px !important;
+}

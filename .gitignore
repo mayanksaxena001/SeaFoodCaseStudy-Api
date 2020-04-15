@@ -2,6 +2,7 @@ Ethereum-nodejs/node_modules
 
 Ethereum-nodejs/.git
 Ethereum-nodejs/.vscode
+Ethereum-nodejs/.history
 
 Beacon-server/.git
 Beacon-server/.vscode
@@ -10,4 +11,5 @@ Beacon-server/node_modules
 
 AngularClient/node_modules
 AngularClient/dist
+AngularClient/.history
 
