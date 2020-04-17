@@ -4,13 +4,12 @@ var cors = require('cors');
 var sequelize = require('./database.seq.config');
 module.exports = (app) => {
     console.log('Setting cors options in server');
-    const whitelist = ['http://localhost:4200', 'http://localhost:8001'];
+    const whitelist = ['http://localhost:4200', 'http://localhost:8001','https://demo.xftchain.club'];
     const allowedheaders = ["Origin, X-Requested-With", "Content-Type", "Accept","x-access-token"];
     const exposedheaders = ["x-access-token"];
     const methods = ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'];
     var corsOptions = {
         origin: whitelist,
-        optionsSuccessStatus: 200,// some legacy browsers (IE11, various SmartTVs) choke on 204
         methods: methods,
         allowedHeaders: allowedheaders,
         exposedHeaders: exposedheaders,

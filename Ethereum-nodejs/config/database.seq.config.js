@@ -1,6 +1,5 @@
 var Sequelize = require( 'sequelize');
 var Promise = require( 'bluebird');
-var path = require( 'path');
 const env = process.env;
 class Database {
     constructor() {
