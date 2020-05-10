@@ -27,14 +27,14 @@ module.exports = {
       gas: 9000000000000000
     },
     ganache_cloud: {
-      host: 'ec2-13-126-235-71.ap-south-1.compute.amazonaws.com',
-      port: 80,
+      host: 'ec2-13-233-90-57.ap-south-1.compute.amazonaws.com',
+      port: 443,
       //  from: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
       network_id: '2100',
       // gas: 9000000000000000,
       // gasPrice: 1
     },
- ganache: {
+    ganache: {
       host: 'localhost',
       port: 8545,
       //  from: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
@@ -56,14 +56,14 @@ module.exports = {
       network_id: '1114',
       gas: 9000000000000000
     }
-},
+  },
   solc: {
     optimizer: {
       enabled: true,
       runs: 200
-  }
-},
-compilers: {
+    }
+  },
+  compilers: {
     solc: {
       version: "^0.4.24"
     }
