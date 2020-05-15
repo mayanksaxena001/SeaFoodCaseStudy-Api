@@ -50,7 +50,7 @@
     "server": "nodemon server.js --exec babel-node",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "nodemon server.js --exec babel-node --presets es2015,stage-2"
+    "start": "node server.js --exec babel-node --presets es2015,stage-2"
   },
   "keywords": [
     "Ethereum",

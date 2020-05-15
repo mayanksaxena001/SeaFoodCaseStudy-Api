@@ -167,9 +167,10 @@ module.exports = {
     }
   },
 
-  async isWeb3Connected(req, res, callback) {
+  async isWeb3NodeConnected(req, res, callback) {
     try {
       if (!contractConfig.isWeb3Connected()) throw new Error("Web3 not connected to any Ethereum node");
+      // await _contract.setGas(req.decoded.account);
       callback();
     } catch (err) {
       console.error(err);

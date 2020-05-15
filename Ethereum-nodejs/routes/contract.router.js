@@ -3,7 +3,7 @@ var StateContractApi = require('../api/StateContractApi');
 var auth = require('../controllers/AuthController');
 var express = require('express');
 const router = express.Router();
-router.use('/', auth.checkToken, auth.isWeb3Connected);
+router.use('/', auth.checkToken, auth.isWeb3NodeConnected);
 router.param('id', SeaFoodContractApi.validation_req);
 
 router.get('/user/:id', SeaFoodContractApi.get_user);
