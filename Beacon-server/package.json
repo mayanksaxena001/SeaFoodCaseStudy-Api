@@ -37,7 +37,7 @@
   "author": "Mayank Saxena",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "hbs": "^4.0.1",
     "mosca": "^2.8.1",
     "mqtt": "^2.18.0",
