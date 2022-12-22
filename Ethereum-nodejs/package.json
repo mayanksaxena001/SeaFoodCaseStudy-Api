@@ -32,7 +32,7 @@
     "ethereumjs-util": "^5.1.5",
     "ethereumjs-wallet": "^0.6.3",
     "hbs": "^4.0.1",
-    "jsonwebtoken": "^8.2.0",
+    "jsonwebtoken": "^9.0.0",
     "request": "^2.81.0",
     "truffle": "4.1.8",
     "truffle-contract": "^3.0.4",
